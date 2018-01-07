@@ -1,0 +1,54 @@
+var c = require('../config.js');
+var log = require('./log.js');
+
+module.exports.guildMemberAdd = function(guildMember){
+    guildMember.addRole(c.baseRole);
+}
+
+module.exports.repeat = function(message, input){
+    log.info(message.content);
+}
+
+module.exports.lockdown = function(message, input){
+    //if user is a mod
+    if(c.bot.guilds.get(c.guildId).members.get(message.author.id).roles.array().includes(c.bot.guilds.get(c.guildId).roles.get(c.mod))){
+        //calculate total time
+        var time = 0;
+        var content = message.content;
+        var num = 0;
+        for(var i = 10; i < content.length; i++){
+            var char = content.charAt(i);
+            if(char == ' ') continue;
+            if(char == 'S' || char == 's'){ time += (1000 * num); num = 0; }
+            if(char == 'M' || char == 'm'){ time += (60000 * num); num = 0; }
+            if(char == 'H' || char == 'h'){ time += (3600000 * num); num = 0; }
+            if(/^\d$/.exec(char) != null){ num *= 10; num += parseInt(char, 10); }
+        }
+        
+        
+        message.channel.overwritePermissions(c.everyone, {
+            'SEND_MESSAGES': false,
+        });
+        const embed = new v.Discord.RichEmbed()
+            .setAuthor('Moderation', 'https://wendehammerz.de/images/ssl.png')
+            .setColor(0xE84C3D)
+            .setDescription('Locked Down! ' + 'Time= ' + v.moment.duration(time).hours() + ':' + v.moment.duration(time).minutes() + ':' + v.moment.duration(time).seconds())
+            .setFooter('BaristaBot', v.bot.user.avatarURL)
+            .setTimestamp();
+        message.channel.send({ embed });
+        setTimeout(function(){  
+            message.channel.overwritePermissions(v.configFile.everyone, {
+                'SEND_MESSAGES': true,
+            });
+            const embed = new v.Discord.RichEmbed()
+            .setAuthor('Moderation', 'https://wendehammerz.de/images/ssl.png')
+            .setColor(0xE84C3D)
+            .setDescription('Lockdown Done!')
+            .setFooter('BaristaBot', v.bot.user.avatarURL)
+            .setTimestamp();
+        message.channel.send({ embed });
+        }, time);
+    }else{
+        message.channel.send("You are not a mod!");
+    }
+};
