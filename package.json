@@ -1,0 +1,29 @@
+{
+  "name": "baristabot",
+  "version": "1.0.0",
+  "description": "bot",
+  "main": "config-template.js",
+  "dependencies": {
+    "discord.js": "^11.3.0",
+    "https": "^1.0.0",
+    "moment": "^2.20.1",
+    "node-localstorage": "^1.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "./run.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Squashbucklr/BaristaBot.git"
+  },
+  "keywords": [
+    "bot"
+  ],
+  "author": "Squashbucklr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Squashbucklr/BaristaBot/issues"
+  },
+  "homepage": "https://github.com/Squashbucklr/BaristaBot#readme"
+}
