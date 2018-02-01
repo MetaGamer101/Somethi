@@ -12,13 +12,13 @@ var tick = 0;
 //Route message handlers
 //Note: ONLY ONE function can be run per message. First gets priority.
 function initMsgHandles(){
-    msgh(/^!m .*/, core.repeat);
     msgh(/^![Ll]ockdown ( ?\d+ ?[HhMmSs])+$/, core.lockdown);
     msgh(/^(![Ss]tats h[ae]lp)$/, stat.help);
     msgh(/^![Ss]tats add ((\w+)#(\d+))$/, stat.add);
     msgh(/^(![Ss]tats heroes)$/, stat.listHeros);
     msgh(/^![Ss]tats get ((\w+)#(\d+))(.*)$/, stat.get);
     msgh(/^![Ss]tats (.+)$/, stat.addHero);
+    msgh(/^!m.*/, core.repeat);
 }
 function initMinuteHandles(){
     minh(10, stat.refresh);

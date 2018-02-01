@@ -1,85 +1,35 @@
-//var heros = [
-//    {
-//        "GENJI",
-//        "emoji"
-//    },{
-//        "MCCREE",
-//        "emoji"
-//    },{
-//        "PHARAH",
-//        "emoji"
-//    },{
-//        "REAPER",
-//        "emoji"
-//    },{
-//        "SOLDIER76",
-//        "emoji"
-//    },{
-//        "TRACER",
-//        "emoji"
-//    },{
-//        "BASTION",
-//        "emoji"
-//    },{
-//        "HANZO",
-//        "emoji"
-//    },{
-//        "JUNKRAT",
-//        "emoji"
-//    },{
-//        "MEI",
-//        "emoji"
-//    },{
-//        "TORBJORN",
-//        "emoji"
-//    },{
-//        "WIDOWMAKER",
-//        "emoji"
-//    },{
-//        "DVA",
-//        "emoji"
-//    },{
-//        "REINHARDT",
-//        "emoji"
-//    },{
-//        "ROADHOG",
-//        "emoji"
-//    },{
-//        "WINSTON",
-//        "emoji"
-//    },{
-//        "ZARYA",
-//        "emoji"
-//    },{
-//        "LUCIO",
-//        "emoji"
-//    },{
-//        "MERCY",
-//        "emoji"
-//    },{
-//        "SYMMETRA",
-//        "emoji"
-//    },{
-//        "ZENYATTA",
-//        "emoji"
-//    },{
-//        "ANA",
-//        "emoji"
-//    },{
-//        "SOMBRA",
-//        "emoji"
-//    },{
-//        "ORISA",
-//        "emoji"
-//    },{
-//        "DOOMFIST",
-//        "emoji"
-//    },{
-//        "MOIRA",
-//        "emoji"
-//    }
-//];
-//
-//module.exports.getHeros(heroCode){
-//    
-//}
+var heros = [
+    "GENJI",
+    "MCCREE",
+    "PHARAH",
+    "REAPER",
+    "SOLDIER76",
+    "TRACER",
+    "BASTION",
+    "HANZO",
+    "JUNKRAT",
+    "MEI",
+    "TORBJORN",
+    "WIDOWMAKER",
+    "DVA",
+    "REINHARDT",
+    "ROADHOG",
+    "WINSTON",
+    "ZARYA",
+    "LUCIO",
+    "MERCY",
+    "SYMMETRA",
+    "ZENYATTA",
+    "ANA",
+    "SOMBRA",
+    "ORISA",
+    "DOOMFIST",
+    "MOIRA"
+];
+var emojis = [
+    ""
+];
+
+module.exports.getHeros(heroCode){
+    
+}
