@@ -9,7 +9,7 @@ var userTemplate = {
     "battleTagNum": null,
     "platform": "pc",
     "region": "us",
-    "heros": 0,
+    "heroCode": 0,
     "rank": 0,
     "rankType": 0
 };

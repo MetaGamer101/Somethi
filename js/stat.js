@@ -2,7 +2,7 @@ var c = require('../config.js');
 var user = require('./user.js');
 var http = require('http');
 var log = require('./log.js');
-
+var hero = require('./hero.js');
 module.exports.update = function(){
     //Get stat information for each user with an attached account
     user.each(u => {
@@ -42,7 +42,7 @@ module.exports.refresh = function(){
            message.delete();
         });
     });
-    var str = "";
+    var str = "STAT INFO:\n";
     var users = user.all();
     for(var i = 0; i < users.length; i++){
         str += users[i].battleTagName;
