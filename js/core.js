@@ -1,17 +1,28 @@
 var c = require('../config.js');
 var log = require('./log.js');
+var moment = require('moment');
 
 module.exports.guildMemberAdd = function(guildMember){
     guildMember.addRole(c.baseRole);
 }
+module.exports.guildMemberRemove = function(guildMember){
+    
+}
 
 module.exports.repeat = function(message, input){
     log.info(message.content);
+    log.info('sent by: ' + message.author.id);
 }
+
+////////
+//
+//  LOCKDOWN
+//
+////////
 
 module.exports.lockdown = function(message, input){
     //if user is a mod
-    if(c.bot.guilds.get(c.guildId).members.get(message.author.id).roles.array().includes(c.bot.guilds.get(c.guildId).roles.get(c.mod))){
+  if(c.bot.guilds.get(c.guildId).members.get(message.author.id).roles.array().includes(c.bot.guilds.get(c.guildId).roles.get(c.moderator))){
         //calculate total time
         var time = 0;
         var content = message.content;
@@ -25,26 +36,25 @@ module.exports.lockdown = function(message, input){
             if(/^\d$/.exec(char) != null){ num *= 10; num += parseInt(char, 10); }
         }
         
-        
-        message.channel.overwritePermissions(c.everyone, {
+        message.channel.overwritePermissions(c.baseRole, {
             'SEND_MESSAGES': false,
-        });
-        const embed = new v.Discord.RichEmbed()
-            .setAuthor('Moderation', 'https://wendehammerz.de/images/ssl.png')
+        }, 'lockdown');
+        const embed = new c.Discord.RichEmbed()
+            .setAuthor('Moderation', 'https://i.imgur.com/teomqtz.png')
             .setColor(0xE84C3D)
-            .setDescription('Locked Down! ' + 'Time= ' + v.moment.duration(time).hours() + ':' + v.moment.duration(time).minutes() + ':' + v.moment.duration(time).seconds())
-            .setFooter('BaristaBot', v.bot.user.avatarURL)
+            .setDescription('Locked Down! ' + 'Time= ' + moment.duration(time).hours() + ':' + moment.duration(time).minutes() + ':' + moment.duration(time).seconds())
+            .setFooter('BaristaBot', c.bot.user.avatarURL)
             .setTimestamp();
         message.channel.send({ embed });
         setTimeout(function(){  
-            message.channel.overwritePermissions(v.configFile.everyone, {
-                'SEND_MESSAGES': true,
-            });
-            const embed = new v.Discord.RichEmbed()
-            .setAuthor('Moderation', 'https://wendehammerz.de/images/ssl.png')
+            message.channel.overwritePermissions(c.baseRole, {
+                'SEND_MESSAGES': null
+            }, 'lockdown');
+            const embed = new c.Discord.RichEmbed()
+            .setAuthor('Moderation', 'https://i.imgur.com/teomqtz.png')
             .setColor(0xE84C3D)
             .setDescription('Lockdown Done!')
-            .setFooter('BaristaBot', v.bot.user.avatarURL)
+            .setFooter('BaristaBot', c.bot.user.avatarURL)
             .setTimestamp();
         message.channel.send({ embed });
         }, time);

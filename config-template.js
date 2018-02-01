@@ -37,5 +37,9 @@ module.exports = {
     //BASE ROLE
     "baseRole": "REPLACE"
     //the standard user role everyone gets
+    ,
+    //BOT LOG
+    "botLog": "REPLACE" 
+    //the log channel for the bot
     
 }
