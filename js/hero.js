@@ -30,6 +30,6 @@ var emojis = [
     ""
 ];
 
-module.exports.getHeros(heroCode){
+module.exports.getHeros = function(heroCode){
     
 }
