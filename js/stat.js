@@ -31,6 +31,11 @@ module.exports.update = function(){
                         throw(e);
                     }
                 }
+                
+                if(data.competitive.rank == undefined){
+                    console.log(data);
+                    badBT = true;
+                }
 
                 if(!badBT){
                     u.rank = data.competitive.rank;
