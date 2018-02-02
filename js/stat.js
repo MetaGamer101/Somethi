@@ -32,7 +32,7 @@ module.exports.update = function(){
                     }
                 }
                 
-                if(data.competitive == undefined){
+                if(!badBT && data.competitive == undefined){
                     console.log(data);
                     badBT = true;
                 }
