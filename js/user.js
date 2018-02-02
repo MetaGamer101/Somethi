@@ -40,12 +40,18 @@ module.exports.start = function(){
 };
 
 module.exports.newUser = function(guildMember){
-    log.info('user join!');
+    newUserById(guildMember.user.id);
+};
+
+module.exports.newUserById = newUserById;
+
+function newUserById(guildMemberId){
     var newUser = JSON.parse(JSON.stringify(userTemplate)); // Create a new user from template
-    newUser.guildMemberId = guildMember.user.id;                      // Give it the correct guildMember
+    newUser.guildMemberId = guildMemberId;                      // Give it the correct guildMember
     users.push(newUser);                                    // Add it to the users array
     save();                                                 // Save the users array
-};
+    return newUser;
+}
 
 module.exports.each = function(cb){
     for(var i = 0; i < users.length; i++){
@@ -76,7 +82,7 @@ function get(guildMember){
 
 function indexById(guildMemberId){
     for(var i = 0; i < users.length; i++){
-        if(users[i].guildMemberId = guildMemberId){
+        if(users[i].guildMemberId == guildMemberId){
             return i;
         }
     }

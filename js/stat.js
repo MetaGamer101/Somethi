@@ -1,4 +1,5 @@
 var c = require('../config.js');
+var localStorage = require('node-localstorage').LocalStorage('./dat');
 var user = require('./user.js');
 var http = require('http');
 var log = require('./log.js');
@@ -16,10 +17,16 @@ module.exports.update = function(){
                     data = JSON.parse(body);
                 } catch(e){
                     if(e instanceof SyntaxError){
-                        //Huh??
-                        log.error('Bad battletag on update??? ' + u.battleTagName + '-' + u.battleTagNum);
-                        log.error('Here\'s what it said:\n' + body);
-                        badBT = true;
+                        var input = /<title>Application Error<\/title>/.exec(body);
+                        if(input != null){
+                            log.warn(u.battleTagName + '#' + u.battleTagNum + ' failed. This is why this api sucks.');
+                            badBT = true;
+                        }else{
+                            //Huh??
+                            log.error('Bad battletag on update??? ' + u.battleTagName + '#' + u.battleTagNum);
+                            log.error('Here\'s what it said:\n' + body);
+                            badBT = true;
+                        }
                     }else{
                         throw(e);
                     }
@@ -27,13 +34,34 @@ module.exports.update = function(){
 
                 if(!badBT){
                     u.rank = data.competitive.rank;
-                    u.rankType = parseInt(data.competitive.rank_img.split('')[data.competitive.rank_img.length - 5]);
+                    if(data.competitive.rank_img == null){
+                        u.rankType = 0;
+                    }else{
+                        u.rankType = parseInt(data.competitive.rank_img.split('')[data.competitive.rank_img.length - 5]);
+                    }
                     user.updateUser(u);
                 }
             });
         }
     });
 };
+
+module.exports.loadOld = function(message, input){
+    var oldUsers = JSON.parse(localStorage.getItem('oldusr'));
+    for(var i = 0; i < oldUsers.all.length; i++){
+        var curr = oldUsers.all[i];
+        var u = user.newUserById(curr.discord);
+        u.battleTagName = curr.name;
+        u.battleTagNum = curr.battleTag;
+        u.rank = curr.rank;
+        //we dont know the rankType, so assume
+        u.rankType = curr.rank == null ? 0 : curr.rank < 1500 ? 1 : curr.rank < 2000 ? 2 : curr.rank < 2500 ? 3 : curr.rank < 3000 ? 4 : curr.rank < 3500 ? 5 : curr.rank < 4000 ? 6 : 7;
+        for(var j = 0; j < curr.heroes.length; j++){
+            u.heroCode = hero.toggle(u.heroCode, curr.heroes[j]).heroCode;
+        }
+        user.save(u);
+    }
+}
 
 module.exports.listHeros = function(message, input){
     var heros = hero.getHeros(user.get(message.author).heroCode);
