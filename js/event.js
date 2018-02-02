@@ -19,7 +19,7 @@ function initMsgHandles(){
     msgh(/^![Ss]tats get ((\w+)#(\d+))(.*)$/, stat.get);
     msgh(/^![Ss]tats (.+)$/, stat.addHero);
     msgh(/^!m.*/, core.repeat);
-    msgh(/^!l.*/, stat.loadOld);
+//    msgh(/^!l.*/, stat.loadOld);
 }
 function initMinuteHandles(){
     minh(10, stat.refresh);
