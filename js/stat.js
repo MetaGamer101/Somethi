@@ -35,6 +35,35 @@ module.exports.update = function(){
     });
 };
 
+module.exports.listHeros = function(message, input){
+    var heros = hero.getHeros(user.get(message.author).heroCode);
+    if(heros.length == 0){
+        message.channel.send("No heros!");
+    }else{
+        var res = "";
+        for(var i = 0; i < heros.length; i++){
+            res += heros[i].name + "\n"
+        }   
+        message.channel.send(res);
+
+    }
+    
+}
+
+module.exports.addHero = function(message, input){
+    var u = user.get(message.author);
+    var toggleData = hero.toggle(u.heroCode, input[1]);
+    if(toggleData.newStatus == null){
+        message.channel.send("Could not add hero");
+    }else if(toggleData.newStatus){
+        message.channel.send(input[1] + " has been turned **on**.");
+    }else{// !u.newStatus
+        message.channel.send(input[1] + " has been turned **off**.");
+    }
+    u.heroCode = toggleData.heroCode;
+    user.updateUser(u);
+}
+
 module.exports.refresh = function(){
     var channel = c.bot.guilds.get(c.guildId).channels.get(c.statInfo);
     channel.fetchMessages().then(messages => {
