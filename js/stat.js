@@ -4,6 +4,18 @@ var user = require('./user.js');
 var http = require('http');
 var log = require('./log.js');
 var hero = require('./hero.js');
+
+var rankEmojis = [
+	null,
+	"292658692069785600",
+	"292658692162322432", 
+	"292658691784704002", 
+	"292658692296540160", 
+	"292658692518576139", 
+	"292658692673765376", 
+	"292658692724097024"
+];
+
 module.exports.update = function(){
     //Get stat information for each user with an attached account
     user.each(u => {
@@ -85,16 +97,19 @@ module.exports.listHeroes = function(message, input){
 
 module.exports.addHero = function(message, input){
     var u = user.get(message.author);
-    var toggleData = hero.toggle(u.heroCode, input[1]);
+    var toggleData = hero.toggle(u.heroCode, input[2]);
     if(toggleData.newStatus == null){
         message.channel.send("Could not add hero");
     }else if(toggleData.newStatus){
-        message.channel.send(input[1] + " has been turned **on**.");
+        message.channel.send(input[2] + " has been turned **on**.");
     }else{// !u.newStatus
-        message.channel.send(input[1] + " has been turned **off**.");
+        message.channel.send(input[2] + " has been turned **off**.");
     }
+    log.info(u.heroCode);
+    log.info(toggleData.heroCode);
     u.heroCode = toggleData.heroCode;
     user.updateUser(u);
+	user.save();
 }
 
 module.exports.refresh = function(){
@@ -104,17 +119,40 @@ module.exports.refresh = function(){
            message.delete();
         });
     });
-    var str = "STAT INFO:\n";
+    var strs = [];
+    strs.push("**Nexus Player Stats**\n");
     var users = user.all();
+    users.sort(function(a, b){
+	return b.rank - a.rank;
+    });
+    var tmpstr = "";
     for(var i = 0; i < users.length; i++){
-        str += users[i].battleTagName;
+	var str = "";
+	var u = users[i];
+	if(u.rank == undefined || u.rank == 0) continue;
+	str += c.bot.emojis.get(rankEmojis[u.rankType]);
+	str += " ";
+	str += u.rank;
+	str += " ";
+	str += u.battleTagName;
         str += "#";
-        str += users[i].battleTagNum;
-        str += ": ";
-        str += users[i].rank;
-        str += '\n';
+        str += u.battleTagNum;
+	var heroes = hero.getHeroes(u.heroCode);
+        for(var j = 0; j < heroes.length; j++){
+            str += c.bot.emojis.get(heroes[j].emoji);
+	}
+	str += "\n";
+	if((tmpstr + str).length > 2000){
+            strs.push(tmpstr);
+	    tmpstr = str;
+	}else{
+            tmpstr += str;
+	}
     }
-    channel.send(str);
+    strs.push(tmpstr);
+    for(var i = 0; i < strs.length; i++){
+        channel.send(strs[i]);
+    }
 }
 
 module.exports.add = function(message, input){

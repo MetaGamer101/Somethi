@@ -90,6 +90,7 @@ function indexById(guildMemberId){
 }
 
 module.exports.updateUser = function(userData){
+    log.info(userData.guildMemberId + " updated.");
     var i = indexById(userData.guildMemberId);
     users[i] = userData;
     save();

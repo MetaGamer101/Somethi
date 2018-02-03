@@ -1,3 +1,5 @@
+var log = require('./log.js');
+var c = require('../config.js');
 var heroes = [
     {
         "name": "Genji",
@@ -131,7 +133,7 @@ module.exports.getHeroes = function(heroCode){
 
 module.exports.toggle = function(heroCode, hero){
     for(var i = 0; i < heroes.length; i++){
-        var input = heroes[i].regex.exec(hero);
+        var input = heroes[i].regex.exec(hero.toLowerCase());
         if(input != null){
             if(getAllHeroes(heroCode)[i]){
                 heroCode -= Math.pow(2, i);

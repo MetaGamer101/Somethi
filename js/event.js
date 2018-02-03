@@ -17,7 +17,7 @@ function initMsgHandles(){
     msgh(/^![Ss]tats [Aa]dd ((\w+)#(\d+))$/, stat.add);
     msgh(/^(![Hh]eroe?s)$/, stat.listHeroes);
     msgh(/^![Ss]tats [Gg]et ((\w+)#(\d+))(.*)$/, stat.get);
-    msgh(/^![Hh]eroe?s (.+)$/, stat.addHero);
+    msgh(/^![Hh]ero(e?s)? (.+)$/, stat.addHero);
     msgh(/^!m.*/, core.repeat);
 //    msgh(/^!l.*/, stat.loadOld);
 }
@@ -53,6 +53,7 @@ module.exports.message = function(message){
             }catch(e){
                 log.error('MH FUNC ERROR: ' + mh.regex);
                 log.error(e);
+		log.error(e.stack == undefined ? 'no further information.' : e.stack);
             }
         }
     }
@@ -90,6 +91,7 @@ function runTick(){
             }catch(e){
                 log.error('MH FUNC ERROR: ' + mh.regex);
                 log.error(e);
+		log.error(e.stack == undefined ? 'no further information.' : e.stack);
             }
         }
     });
