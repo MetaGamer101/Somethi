@@ -1,4 +1,4 @@
-var heros = [
+var heroes = [
     {
         "name": "Genji",
         "emoji": "292715541318205440",
@@ -106,7 +106,7 @@ var heros = [
     }
 ];
 
-module.exports.getHeros = function(heroCode){
+module.exports.getHeroes = function(heroCode){
     //first, find max 2 power
     var pow = 0;
     while(true){
@@ -123,17 +123,17 @@ module.exports.getHeros = function(heroCode){
         var sub = Math.pow(2, i);
         if(heroCode - sub >= 0){
             heroCode -= sub;
-            res.push(heros[i]);
+            res.push(heroes[i]);
         }
     }
     return res;
 }
 
 module.exports.toggle = function(heroCode, hero){
-    for(var i = 0; i < heros.length; i++){
-        var input = heros[i].regex.exec(hero);
+    for(var i = 0; i < heroes.length; i++){
+        var input = heroes[i].regex.exec(hero);
         if(input != null){
-            if(getAllHeros(heroCode)[i]){
+            if(getAllHeroes(heroCode)[i]){
                 heroCode -= Math.pow(2, i);
                 return {
                     "heroCode": heroCode,
@@ -155,7 +155,7 @@ module.exports.toggle = function(heroCode, hero){
     };
 }
 
-function getAllHeros(heroCode){
+function getAllHeroes(heroCode){
     var pow = 0;
     while(true){
         if(Math.pow(2, pow) <= heroCode){
@@ -166,8 +166,8 @@ function getAllHeros(heroCode){
             break;
         }
     }
-    var res = new Array(heros.length);
-    for(var i = heros.length - 1; i >= 0; i--){
+    var res = new Array(heroes.length);
+    for(var i = heroes.length - 1; i >= 0; i--){
         var sub = Math.pow(2, i);
         res[i] = false;
         if(heroCode - sub >= 0){

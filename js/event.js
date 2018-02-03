@@ -13,17 +13,17 @@ var tick = 0;
 //Note: ONLY ONE function can be run per message. First gets priority.
 function initMsgHandles(){
     msgh(/^![Ll]ockdown ( ?\d+ ?[HhMmSs])+$/, core.lockdown);
-    msgh(/^(![Ss]tats h[ae]lp)$/, stat.help);
-    msgh(/^![Ss]tats add ((\w+)#(\d+))$/, stat.add);
-    msgh(/^(![Ss]tats heroes)$/, stat.listHeros);
-    msgh(/^![Ss]tats get ((\w+)#(\d+))(.*)$/, stat.get);
-    msgh(/^![Ss]tats (.+)$/, stat.addHero);
+    msgh(/^(![Ss]tats [Hh][ae]lp)$/, stat.help);
+    msgh(/^![Ss]tats [Aa]dd ((\w+)#(\d+))$/, stat.add);
+    msgh(/^(![Hh]eroe?s)$/, stat.listHeroes);
+    msgh(/^![Ss]tats [Gg]et ((\w+)#(\d+))(.*)$/, stat.get);
+    msgh(/^![Hh]eroe?s (.+)$/, stat.addHero);
     msgh(/^!m.*/, core.repeat);
 //    msgh(/^!l.*/, stat.loadOld);
 }
 function initMinuteHandles(){
     minh(10, stat.refresh);
-    minh(60, stat.update)
+    minh(60, stat.update, -5);
 }
 
 module.exports.ready = function(){
@@ -84,7 +84,14 @@ function tickLoop(){
 
 function runTick(){
     minmap.forEach(mh => {
-        if(tick % mh.tick == 0) mh.func();
+        if((tick - mh.offset) % mh.tick == 0){
+            try{
+                mh.func();
+            }catch(e){
+                log.error('MH FUNC ERROR: ' + mh.regex);
+                log.error(e);
+            }
+        }
     });
 }
 
@@ -95,10 +102,12 @@ function msgh(regex, func){
     };
     msgmap.push(res);
 }
-function minh(tick, func){
+function minh(tick, func, offset){
+    if(offset == undefined) offset = 0;
     var res = {
         "tick": tick,
-        "func": func
+        "func": func,
+        "offset": offset
     };
     minmap.push(res);
 }

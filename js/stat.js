@@ -10,7 +10,7 @@ module.exports.update = function(){
         if(u.battleTagName != null && u.battleTagName.length > 0){
             log.info('updating ' + u.battleTagName);
             getData(u.platform, u.region, u.battleTagName, u.battleTagNum, body => {
-                log.info('data recieved for ' + u.battleTagName);
+                log.info('data returned for ' + u.battleTagName);
                 var data;
                 var badBT = false;
                 try{
@@ -33,7 +33,7 @@ module.exports.update = function(){
                 }
                 
                 if(!badBT && data.competitive == undefined){
-                    console.log(data);
+                    log.error('Seems like ' + u.battleTagName + '#' + u.battleTagNum + ' changed their name!');
                     badBT = true;
                 }
 
@@ -68,14 +68,14 @@ module.exports.loadOld = function(message, input){
     }
 }
 
-module.exports.listHeros = function(message, input){
-    var heros = hero.getHeros(user.get(message.author).heroCode);
-    if(heros.length == 0){
-        message.channel.send("No heros!");
+module.exports.listHeroes = function(message, input){
+    var heroes = hero.getHeroes(user.get(message.author).heroCode);
+    if(heroes.length == 0){
+        message.channel.send("No heroes!");
     }else{
         var res = "";
-        for(var i = 0; i < heros.length; i++){
-            res += heros[i].name + "\n"
+        for(var i = 0; i < heroes.length; i++){
+            res += heroes[i].name + "\n"
         }   
         message.channel.send(res);
 
