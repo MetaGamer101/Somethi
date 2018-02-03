@@ -18,9 +18,9 @@ var rankEmojis = [
 
 module.exports.update = function(){
     //Get stat information for each user with an attached account
+    log.info('updating all');
     user.each(u => {
         if(u.battleTagName != null && u.battleTagName.length > 0){
-            log.info('updating ' + u.battleTagName);
             getData(u.platform, u.region, u.battleTagName, u.battleTagNum, body => {
                 log.info('data returned for ' + u.battleTagName);
                 var data;
@@ -40,6 +40,7 @@ module.exports.update = function(){
                             badBT = true;
                         }
                     }else{
+			log.error('json perse error was NOT syntax!');
                         throw(e);
                     }
                 }
@@ -105,11 +106,8 @@ module.exports.addHero = function(message, input){
     }else{// !u.newStatus
         message.channel.send(input[2] + " has been turned **off**.");
     }
-    log.info(u.heroCode);
-    log.info(toggleData.heroCode);
     u.heroCode = toggleData.heroCode;
     user.updateUser(u);
-	user.save();
 }
 
 module.exports.refresh = function(){

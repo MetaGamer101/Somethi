@@ -73,7 +73,7 @@ module.exports.get = get;
 
 function get(guildMember){
     for(var i = 0; i < users.length; i++){
-        if(users[i].guildMemberId = guildMember.id){
+        if(users[i].guildMemberId == guildMember.id){
             return users[i];
         }
     }
@@ -90,7 +90,6 @@ function indexById(guildMemberId){
 }
 
 module.exports.updateUser = function(userData){
-    log.info(userData.guildMemberId + " updated.");
     var i = indexById(userData.guildMemberId);
     users[i] = userData;
     save();
