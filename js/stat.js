@@ -17,12 +17,38 @@ var rankEmojis = [
 ];
 
 module.exports.update = function(){
-    //Get stat information for each user with an attached account
     log.info('updating all');
-    user.each(u => {
+    var firstRun = user.all();
+    updateUsers(firstRun, secondRun => {
+   	if(secondRun.length > 0){
+	    log.info('second update wave');
+	    updateUsers(secondRun, thirdRun => {
+	        if(thirdRun.length > 0){
+		    log.info('third update wave');
+		    updateUsers(thirdRun, bad => {
+			log.info('finished update!');
+		        log.warn('the following did not return after three tries');
+			for(var i = 0; i < bad.length; i++){
+			    log.warn(bad[i].battleTagName + '#' + bad[i].battleTagNum);
+			}	
+		    });
+		}else{
+		    log.info('finished update!');
+		}	
+	    });
+	}else{
+	    log.info('finished update!');
+	}	
+    });
+}
+
+function updateUsers(ulist, callBack){
+    //Get stat information for each user with an attached account
+    var left = ulist.length;
+    var broken = [];
+    ulist.forEach(u => {
         if(u.battleTagName != null && u.battleTagName.length > 0){
             getData(u.platform, u.region, u.battleTagName, u.battleTagNum, body => {
-                log.info('data returned for ' + u.battleTagName);
                 var data;
                 var badBT = false;
                 try{
@@ -31,13 +57,14 @@ module.exports.update = function(){
                     if(e instanceof SyntaxError){
                         var input = /<title>Application Error<\/title>/.exec(body);
                         if(input != null){
-                            log.warn(u.battleTagName + '#' + u.battleTagNum + ' failed. This is why this api sucks.');
                             badBT = true;
+			    broken.push(u);
                         }else{
                             //Huh??
                             log.error('Bad battletag on update??? ' + u.battleTagName + '#' + u.battleTagNum);
                             log.error('Here\'s what it said:\n' + body);
                             badBT = true;
+			    broken.push(u);
                         }
                     }else{
 			log.error('json perse error was NOT syntax!');
@@ -59,6 +86,10 @@ module.exports.update = function(){
                     }
                     user.updateUser(u);
                 }
+		left--;
+		if(left == 0){
+		    callBack(broken);
+		}
             });
         }
     });
