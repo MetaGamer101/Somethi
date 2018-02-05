@@ -35,6 +35,7 @@ module.exports.ready = function(){
         }
     });
     initMsgHandles();
+    initMinuteHandles();
     user.start();
     tickLoop(); //start the tick loop
     log.info('ready');

@@ -67,7 +67,7 @@ function updateUsers(ulist, callBack){
 			    broken.push(u);
                         }
                     }else{
-			log.error('json perse error was NOT syntax!');
+                        log.error('json perse error was NOT syntax!');
                         throw(e);
                     }
                 }
@@ -86,10 +86,10 @@ function updateUsers(ulist, callBack){
                     }
                     user.updateUser(u);
                 }
-		left--;
-		if(left == 0){
-		    callBack(broken);
-		}
+                left--;
+                if(left == 0){
+                    callBack(broken);
+                }
             });
         }
     });
