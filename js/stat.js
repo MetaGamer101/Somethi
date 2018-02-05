@@ -27,10 +27,12 @@ module.exports.update = function(){
 		    log.info('third update wave');
 		    updateUsers(thirdRun, bad => {
 			log.info('finished update!');
-		        log.warn('the following did not return after three tries');
-			for(var i = 0; i < bad.length; i++){
-			    log.warn(bad[i].battleTagName + '#' + bad[i].battleTagNum);
-			}	
+                if(bad.length > 0){
+                    log.warn('the following did not return after three tries');
+                    for(var i = 0; i < bad.length; i++){
+                        log.warn(bad[i].battleTagName + '#' + bad[i].battleTagNum);
+                    }
+                }
 		    });
 		}else{
 		    log.info('finished update!');
