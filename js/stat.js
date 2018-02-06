@@ -190,10 +190,14 @@ module.exports.add = function(message, input){
     var battleTagName = input[2];
     var battleTagNum = input[3];
     var u = user.get(message.author);
+    if(u == null){
+        u = user.newUser(message.author);
+    }
     u.battleTagName = battleTagName;
     u.battleTagNum = battleTagNum;
     user.updateUser(u);
     log.info('Added STATS listing for ' + battleTagName + '#' + battleTagNum);
+    message.channel.send('Added STATS listing for ' + battleTagName + '#' + battleTagNum);
 }
 
 function getData(platform, region, battleTagName, battleTagNum, cb){

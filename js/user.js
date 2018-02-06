@@ -40,7 +40,7 @@ module.exports.start = function(){
 };
 
 module.exports.newUser = function(guildMember){
-    newUserById(guildMember.user.id);
+    return newUserById(guildMember.id);
 };
 
 module.exports.newUserById = newUserById;
