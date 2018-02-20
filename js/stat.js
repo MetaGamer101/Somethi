@@ -93,7 +93,13 @@ function updateUsers(ulist, callBack){
                     callBack(broken);
                 }
             });
-        }
+        }else{
+	    log.warn('null user: ' + u.guildMemberId);
+	    left --;
+	    if(left == 0){
+		callBack(broken);
+	    }
+	}
     });
 };
 
