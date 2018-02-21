@@ -85,7 +85,7 @@ function tickLoop(){
 }
 
 function runTick(){
-    minmap.forEach(mh => {
+    minmap.forEach(function(mh) {
         if((tick - mh.offset) % mh.tick == 0){
             try{
                 mh.func();
