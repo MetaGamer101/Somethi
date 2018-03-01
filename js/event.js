@@ -1,7 +1,8 @@
 var log = require('./log.js');
 var core = require('./core.js');
-var stat = require('./stat.js')
+var stat = require('./stat.js');
 var user = require('./user.js');
+var team = require('./team.js');
 var c = require('../config.js');
 
 var msgmap = []; //list of message handle objects
@@ -18,6 +19,7 @@ function initMsgHandles(){
     msgh(/^(![Hh]eroe?s)$/, stat.listHeroes);
     msgh(/^![Ss]tats [Gg]et ((\w+)#(\d+))(.*)$/, stat.get);
     msgh(/^![Hh]ero(e?s)? (.+)$/, stat.addHero);
+    msgh(/^[Tt]eam [Cc]reate( (\w+))?/, team.newTeam);
     msgh(/^!m.*/, core.repeat);
 //    msgh(/^!l.*/, stat.loadOld);
 }
@@ -37,6 +39,7 @@ module.exports.ready = function(){
     initMsgHandles();
     initMinuteHandles();
     user.start();
+    team.start();
     tickLoop(); //start the tick loop
     log.info('ready');
     stat.update();

@@ -4,6 +4,7 @@ var user = require('./user.js');
 var http = require('http');
 var log = require('./log.js');
 var hero = require('./hero.js');
+var team = require('./team.js');
 
 var rankEmojis = [
 	null,
@@ -198,6 +199,22 @@ module.exports.add = function(message, input){
     var u = user.get(message.author);
     if(u == null){
         u = user.newUser(message.author);
+    }
+    try{
+        var b = false;
+        for(var i = 0; i < team.all().length; i++){
+            if(team.captian == message.author.id){
+                b = true;
+            }
+        }
+        if(b){
+            message.member.setNickname('[★] ' + input[2]);
+        }else{
+            message.member.setNickname(input[2]);
+        }
+    }catch(e){
+        log.error('probably because is admin');
+        log.error(e);
     }
     u.battleTagName = battleTagName;
     u.battleTagNum = battleTagNum;

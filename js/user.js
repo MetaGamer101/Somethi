@@ -1,5 +1,5 @@
 var localStorage = require('node-localstorage').LocalStorage('./dat');
-var log = require('./log.js')
+var log = require('./log.js');
 
 var users = [];
 
