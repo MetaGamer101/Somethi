@@ -80,6 +80,17 @@ function get(guildMember){
     return null;
 }
 
+module.exports.getById = getById;
+
+function getById(id){
+    for(var i = 0; i < users.length; i++){
+        if(users[i].guildMemberId == id){
+            return users[i];
+        }
+    }
+    return null;
+}
+
 function indexById(guildMemberId){
     for(var i = 0; i < users.length; i++){
         if(users[i].guildMemberId == guildMemberId){

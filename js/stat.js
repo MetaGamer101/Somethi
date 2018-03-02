@@ -6,6 +6,8 @@ var log = require('./log.js');
 var hero = require('./hero.js');
 var team = require('./team.js');
 
+module.exports.rankEmojis = rankEmojis;
+
 var rankEmojis = [
 	null,
 	"292658692069785600",

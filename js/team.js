@@ -1,10 +1,13 @@
 var localStorage = require('node-localstorage').LocalStorage('./dat');
 var log = require('./log.js');
+var user = require('./user.js');
+var stat = require('./stat.js');
 var c = require('../config.js');
 
 var teams = [];
 
-var bannedTeamNames
+var bannedTeamNames = [
+];
 
 var teamTemplate = {
     "name": null,
@@ -74,6 +77,59 @@ function updateTeam(team){
     save();
 }
 
+function getStats(team){
+    var res = {
+        "ranks":[]
+    };
+    
+    var ranks = [];
+    for(var i = -1; i < team.members.length; i++){
+        var member = i == -1 ? team.captain : team.members[i];
+        var usr = user.getById(member);
+        var ind = ranks.indexOf(usr.rankType);
+        if(ind <= -1){
+            ranks.push(usr.rankType);
+        }
+    }
+    
+    ranks.sort(function(a,b){
+        return b-a;
+    });
+    res.ranks = ranks;
+    
+    return res;
+}
+
+module.exports.getTeam = function(message, input){
+    
+    var rankEmojis = [
+        null,
+        "292658692069785600",
+        "292658692162322432", 
+        "292658691784704002", 
+        "292658692296540160", 
+        "292658692518576139", 
+        "292658692673765376", 
+        "292658692724097024"
+    ];
+    
+    var team = getByName(input[1]);
+    var teamStats = getStats(team);
+    
+    var rankStr = "";
+    for(var i = 0; i < teamStats.ranks.length; i++){
+        if(i != 0) rankStr += "";
+        rankStr += c.bot.emojis.get(rankEmojis[teamStats.ranks[i]]);
+    }
+    
+    var embed = new c.Discord.RichEmbed()
+        .setTitle(team.name)
+        .setColor(team.color == null ? "#34363B" : team.color)
+        .setDescription(rankStr)
+    ;
+    message.channel.send({embed});
+}
+
 module.exports.newTeam = function(message, input){
     if(input[1] == undefined){
         message.channel.send('you forgot a team name!');
@@ -85,6 +141,11 @@ module.exports.newTeam = function(message, input){
 //            }
             if(teams[i].name == input[2]){
                 message.channel.send("A team with that name already exists!");
+                return;
+            }
+            var ind = bannedTeamNames.indexOf(input[2]);
+            if(ind > -1){
+                message.channel.send("Cannot use a banned team name!");
                 return;
             }
         }
