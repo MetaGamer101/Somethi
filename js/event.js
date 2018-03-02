@@ -19,7 +19,13 @@ function initMsgHandles(){
     msgh(/^(![Hh]eroe?s)$/, stat.listHeroes);
     msgh(/^![Ss]tats [Gg]et ((\w+)#(\d+))(.*)$/, stat.get);
     msgh(/^![Hh]ero(e?s)? (.+)$/, stat.addHero);
-    msgh(/^[Tt]eam [Cc]reate( (\w+))?/, team.newTeam);
+    msgh(/^![Tt]eam [Cc]reate( (\w[^<>@#]{2,31})( (#[0-9a-fA-F]{6}))?(( (<@\d+>))+)?)?$/, team.newTeam);
+    msgh(/^![Tt]eam (\w[^<>@#]{2,31}) [Cc]olor (#[0-9a-fA-F]{6})/, team.setColor);
+    msgh(/^![Tt]eam (\w[^<>@#]{2,31}) [Mm]ember [Aa]dd (<@(\d+)>)/, team.addMember);
+    msgh(/^![Tt]eam (\w[^<>@#]{2,31}) [Mm]ember [Rr]emove (<@(\d+)>)/, team.removeMember);
+    msgh(/^![Tt]eam (\w[^<>@#]{2,31}) [Ss]ub [Aa]dd (<@(\d+)>)/, team.addSub);
+    msgh(/^![Tt]eam (\w[^<>@#]{2,31}) [Ss]ub [Rr]emove (<@(\d+)>)/, team.removeSub);
+    msgh(/^![Tt]eam (\w[^<>@#]{2,31}) [Cc]aptain (<@(\d+)>)/, team.setCaptain);
     msgh(/^!m.*/, core.repeat);
 //    msgh(/^!l.*/, stat.loadOld);
 }
