@@ -157,8 +157,13 @@ module.exports.addMember = function(message, input){
         return;
     }
     var index = team.members.indexOf(input[3]);
-    if(index > -1){
+    var index2 = team.subs.indexOf(input[3]);
+    if(index2 > -1){
+        message.channel.send("Cannot add a member if they are a sub!");
+        return;
+    }else if(index > -1){
         message.channel.send("Cannot add the same member twice!");
+        return;
     }else{
         team.members.push(input[3]);
         var embed = new c.Discord.RichEmbed()
@@ -192,6 +197,7 @@ module.exports.removeMember = function(message, input){
         message.channel.send({embed});
     }else{
         message.channel.send("Cannot remove a member that wasn't there to begin with!");
+        return;
     }
     updateTeam(team);
 }
@@ -207,8 +213,13 @@ module.exports.addSub = function(message, input){
         return;
     }
     var index = team.subs.indexOf(input[3]);
-    if(index > -1){
+    var index2 = team.members.indexOf(input[3]);
+    if(index2 > -1){
+        message.channel.send("Cannot add a sub if they are a member!");
+        return;
+    }else if(index > -1){
         message.channel.send("Cannot add the same sub twice!");
+        return;
     }else{
         team.subs.push(input[3]);
         var embed = new c.Discord.RichEmbed()
@@ -242,6 +253,7 @@ module.exports.removeSub = function(message, input){
         message.channel.send({embed});
     }else{
         message.channel.send("Cannot remove a sub that wasn't there to begin with!");
+        return;
     }
     updateTeam(team);
 }
