@@ -6,8 +6,6 @@ var log = require('./log.js');
 var hero = require('./hero.js');
 var team = require('./team.js');
 
-module.exports.rankEmojis = rankEmojis;
-
 var rankEmojis = [
 	"419514920443576331", //unranked
 	"292658692069785600", //bronze
@@ -18,6 +16,8 @@ var rankEmojis = [
 	"292658692673765376", //master
 	"292658692724097024"  //grandmaster
 ];
+
+module.exports.rankEmojis = rankEmojis;
 
 module.exports.update = function(){
     log.info('updating all');
