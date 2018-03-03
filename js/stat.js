@@ -188,7 +188,14 @@ function getSingleUserLine(u){
     var str = "";
     str += c.bot.emojis.get(rankEmojis[u.rankType]);
     str += " ";
-    str += (u.rank == null ? "0000" : u.rank);
+    var rankStr = "`";
+    if(u.rank == null) rankStr += "----";
+    else if(u.rank < 10) rankStr += "000" + u.rank.toString();
+    else if(u.rank < 100) rankStr += "00" + u.rank.toString();
+    else if(u.rank < 1000) rankStr += "0" + u.rank.toString();
+    else rankStr += u.rank.toString();
+    rankStr += "`";
+    str += rankStr;
     str += " ";
     str += u.battleTagName;
         str += "#";
