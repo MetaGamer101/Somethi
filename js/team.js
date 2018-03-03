@@ -107,7 +107,7 @@ function getStats(team){
             res.members.push(usr);
             if(usr.rank == null) continue;
         }else{
-            usr = user.getById(team.subs[i]);
+            usr = user.getById(team.subs[j]);
             j++;
             if(usr == undefined || usr == null) continue;
             res.subs.push(usr);
