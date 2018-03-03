@@ -138,8 +138,8 @@ function getStats(team){
     });
     
     res.members.sort(function(a, b){
-        if(a.rank == null) return 1;
         if(b.rank == null) return -1;
+        if(a.rank == null) return 1;
 	    return b.rank - a.rank;
     });
     
