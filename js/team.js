@@ -86,6 +86,7 @@ function getStats(team){
     for(var i = -1; i < team.members.length; i++){
         var member = i == -1 ? team.captain : team.members[i];
         var usr = user.getById(member);
+        if(usr == undefined || usr == null || usr.rankType == null) continue;
         var ind = ranks.indexOf(usr.rankType);
         if(ind <= -1){
             ranks.push(usr.rankType);
@@ -122,12 +123,9 @@ module.exports.getTeam = function(message, input){
         rankStr += c.bot.emojis.get(rankEmojis[teamStats.ranks[i]]);
     }
     
-    var embed = new c.Discord.RichEmbed()
-        .setTitle(team.name)
-        .setColor(team.color == null ? "#34363B" : team.color)
-        .setDescription(rankStr)
-    ;
-    message.channel.send({embed});
+    var retStr = "";
+    retStr += rankStr;
+    message.channel.send(retStr);
 }
 
 module.exports.newTeam = function(message, input){
