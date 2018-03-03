@@ -21,6 +21,7 @@ var teamTemplate = {
 };
 
 module.exports.start = function(){
+//    console.log(c.Discord.Permissions.FLAGS);
     teams = JSON.parse(localStorage.getItem('teams'));
     var keys = Object.keys(teamTemplate);
     if(teams != null){
@@ -230,6 +231,70 @@ module.exports.newTeam = function(message, input){
         message.channel.send({embed});
         teams.push(newTeam);
         save();
+        
+        c.bot.guilds.get(c.guildId).createRole({
+            'name': newTeam.name,
+            'color': newTeam.color,
+            'permissions': 0,
+            'mentionable': true,
+            'hoist': true
+        }).then(role => {
+            newTeam.role = role.id;
+            c.bot.guilds.get(c.guildId).createChannel(newTeam.name, 'text', [
+                {
+                    'deny': 1024, //view channel
+                    'id': c.everyone
+                },
+                {
+                    'allow': 1024, //view channel
+                    'id': role.id
+                }
+            ]).then(channel => {
+                channel.setParent(c.tt).then(channel2 => {
+                    channel2.overwritePermissions(c.bot.guilds.get(c.guildId).me, {
+                        'VIEW_CHANNEL': true
+                    }).then(channel3 => {
+                       channel3.overwritePermissions(c.everyone, {
+                            'VIEW_CHANNEL': false
+                        }).then(channel4 => {
+                           channel4.overwritePermissions(role, {
+                                'VIEW_CHANNEL': true
+                            }).then(channel5 => {
+                               channel5.send(c.bot.users.get(newTeam.captain).toString() + ", here is the chat room for " + role.toString());
+                           }); 
+                        });
+                    });
+                });
+                newTeam.text = channel.id;
+                updateTeam(newTeam);
+            });
+            c.bot.guilds.get(c.guildId).createChannel(newTeam.name, 'voice', [
+                {
+                    'deny': 1024, //view channel
+                    'id': c.everyone
+                },
+                {
+                    'allow': 1024, //view channel
+                    'id': role.id
+                }
+            ]).then(channel => {
+                channel.setParent(c.tv).then(channel2 => {
+                    channel2.overwritePermissions(c.everyone, {
+                        'VIEW_CHANNEL': false
+                    });
+                    channel2.overwritePermissions(role, {
+                        'VIEW_CHANNEL': true
+                    });
+                });
+                newTeam.voice = channel.id;
+                updateTeam(newTeam);
+            });
+            
+            c.bot.guilds.get(c.guildId).members.get(newTeam.captain).addRole(role.id);
+            for(var i = 0; i < newTeam.members.length; i++){
+                c.bot.guilds.get(c.guildId).members.get(newTeam.members[i]).addRole(role.id);
+            }
+        });
     }
 }
 

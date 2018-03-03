@@ -41,5 +41,12 @@ module.exports = {
     //BOT LOG
     "botLog": "REPLACE" 
     //the log channel for the bot
-    
+    ,
+    //TEAM TEXT CHANNEL CATEGORY
+    "tt": "REPLACE"
+    //id for team text channels category
+    ,
+    //TEAM VOICE CHANNEL CATEGORY
+    "tv": "REPLACE"
+    //id for team voice channels category
 }
