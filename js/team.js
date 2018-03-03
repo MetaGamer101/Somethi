@@ -79,24 +79,73 @@ function updateTeam(team){
 
 function getStats(team){
     var res = {
-        "ranks":[]
+        "ranks": [],
+        "teamsr": 0,
+        "maxsr": -1,
+        "minsr": -1,
+        "cap": null,
+        "members": [],
+        "subs": []
     };
     
-    var ranks = [];
-    for(var i = -1; i < team.members.length; i++){
-        var member = i == -1 ? team.captain : team.members[i];
-        var usr = user.getById(member);
-        if(usr == undefined || usr == null || usr.rankType == null) continue;
-        var ind = ranks.indexOf(usr.rankType);
+    var srdiv = 0;
+    
+    var i = -1;
+    var j = 0;
+    while(i < team.members.length || j < team.subs.length){
+        var usr = null;
+        if(i == -1){
+            usr = user.getById(team.captain);
+            i++;
+            if(usr == undefined || usr == null) continue;
+            res.cap = usr;
+            if(usr.rankType == null) continue;
+        }else if(i < team.members.length){
+            usr = user.getById(team.members[i]);
+            i++;
+            if(usr == undefined || usr == null) continue;
+            res.members.push(usr);
+            if(usr.rankType == null) continue;
+        }else{
+            usr = user.getById(team.subs[i]);
+            j++;
+            if(usr == undefined || usr == null) continue;
+            res.subs.push(usr);
+            if(usr.rankType == null) continue;
+        }
+        
+        //for max sr
+        res.maxsr = Math.max(res.maxsr, usr.rank);
+        //for min sr
+        res.minsr = res.minsr == -1 ? usr.rank : Math.min(res.minsr, usr.rank);
+        //for team sr
+        res.teamsr += usr.rank;
+        srdiv++;
+        
+        //for list or ranks
+        var ind = res.ranks.indexOf(usr.rankType);
         if(ind <= -1){
-            ranks.push(usr.rankType);
+            res.ranks.push(usr.rankType);
         }
     }
     
-    ranks.sort(function(a,b){
-        return b-a;
+    //get avg
+    res.teamsr = Math.round(res.teamsr / srdiv);
+    
+    //sort ranks
+    res.ranks.sort(function(a,b){
+        return b - a;
     });
-    res.ranks = ranks;
+    
+    res.members.sort(function(a, b){
+        if(a.rank == null) return 1;
+        if(b.rank == null) return -1;
+	    return b.rank - a.rank;
+    });
+    
+    res.subs.sort(function(a, b){
+	   return b.rank - a.rank;
+    });
     
     return res;
 }
@@ -119,12 +168,23 @@ module.exports.getTeam = function(message, input){
     
     var rankStr = "";
     for(var i = 0; i < teamStats.ranks.length; i++){
-        if(i != 0) rankStr += "";
+        if(i != 0) rankStr += " / ";
         rankStr += c.bot.emojis.get(rankEmojis[teamStats.ranks[i]]);
     }
     
     var retStr = "";
-    retStr += rankStr;
+    retStr += team.name + ": " + rankStr + "\n";
+    retStr += "**" + teamStats.teamsr + "** (" + teamStats.maxsr + " - " + teamStats.minsr + ")" + "\n";
+    retStr += stat.getSingleUserLine(teamStats.cap) + "\n";
+    //Members
+    for(var i = 0; i < teamStats.members.length; i++){
+        retStr += stat.getSingleUserLine(teamStats.members[i]) + "\n";
+    }
+    if(teamStats.subs.length > 0)retStr += "**-SUBS-**";
+    for(var i = 0; i < teamStats.subs.length; i++){
+        retStr += stat.getSingleUserLine(teamStats.subs[i]) + "\n";
+    }
+    //Subs
     message.channel.send(retStr);
 }
 

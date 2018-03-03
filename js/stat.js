@@ -9,14 +9,14 @@ var team = require('./team.js');
 module.exports.rankEmojis = rankEmojis;
 
 var rankEmojis = [
-	null,
-	"292658692069785600",
-	"292658692162322432", 
-	"292658691784704002", 
-	"292658692296540160", 
-	"292658692518576139", 
-	"292658692673765376", 
-	"292658692724097024"
+	"419514920443576331", //unranked
+	"292658692069785600", //bronze
+	"292658692162322432", //silver
+	"292658691784704002", //gold
+	"292658692296540160", //platinum
+	"292658692518576139", //diamond
+	"292658692673765376", //master
+	"292658692724097024"  //grandmaster
 ];
 
 module.exports.update = function(){
@@ -163,37 +163,44 @@ module.exports.refresh = function(){
     strs.push("**Nexus Player Stats**\n");
     var users = user.all();
     users.sort(function(a, b){
-	return b.rank - a.rank;
+	   return b.rank - a.rank;
     });
     var tmpstr = "";
     for(var i = 0; i < users.length; i++){
-	var str = "";
-	var u = users[i];
-	if(u.rank == undefined || u.rank == 0) continue;
-	str += c.bot.emojis.get(rankEmojis[u.rankType]);
-	str += " ";
-	str += u.rank;
-	str += " ";
-	str += u.battleTagName;
-        str += "#";
-        str += u.battleTagNum;
-	var heroes = hero.getHeroes(u.heroCode);
-        for(var j = 0; j < heroes.length; j++){
-            str += c.bot.emojis.get(heroes[j].emoji);
-	}
-	str += "\n";
-	if((tmpstr + str).length > 2000){
-            strs.push(tmpstr);
-	    tmpstr = str;
-	}else{
-            tmpstr += str;
-	}
+        if(users[i].rank == undefined || users[i].rank == 0) continue;
+        var str = "";
+        str += getSingleUserLine(users[i]);
+        str += "\n";
+        if((tmpstr + str).length > 2000){
+                strs.push(tmpstr);
+            tmpstr = str;
+        }else{
+                tmpstr += str;
+        }
     }
     strs.push(tmpstr);
     for(var i = 0; i < strs.length; i++){
         channel.send(strs[i]);
     }
 }
+
+function getSingleUserLine(u){
+    var str = "";
+    str += c.bot.emojis.get(rankEmojis[u.rankType]);
+    str += " ";
+    str += u.rank;
+    str += " ";
+    str += u.battleTagName;
+        str += "#";
+        str += u.battleTagNum;
+    var heroes = hero.getHeroes(u.heroCode);
+        for(var j = 0; j < heroes.length; j++){
+            str += c.bot.emojis.get(heroes[j].emoji);
+    }
+    return str;
+}
+
+module.exports.getSingleUserLine = getSingleUserLine;
 
 module.exports.add = function(message, input){
     var battleTagName = input[2];
