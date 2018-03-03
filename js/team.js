@@ -21,7 +21,6 @@ var teamTemplate = {
 };
 
 module.exports.start = function(){
-    console.log('starting team');
     teams = JSON.parse(localStorage.getItem('teams'));
     var keys = Object.keys(teamTemplate);
     if(teams != null){
