@@ -99,19 +99,19 @@ function getStats(team){
             i++;
             if(usr == undefined || usr == null) continue;
             res.cap = usr;
-            if(usr.rankType == null) continue;
+            if(usr.rank == null) continue;
         }else if(i < team.members.length){
             usr = user.getById(team.members[i]);
             i++;
             if(usr == undefined || usr == null) continue;
             res.members.push(usr);
-            if(usr.rankType == null) continue;
+            if(usr.rank == null) continue;
         }else{
             usr = user.getById(team.subs[i]);
             j++;
             if(usr == undefined || usr == null) continue;
             res.subs.push(usr);
-            if(usr.rankType == null) continue;
+            if(usr.rank == null) continue;
         }
         
         //for max sr
@@ -151,25 +151,13 @@ function getStats(team){
 }
 
 module.exports.getTeam = function(message, input){
-    
-    var rankEmojis = [
-        null,
-        "292658692069785600",
-        "292658692162322432", 
-        "292658691784704002", 
-        "292658692296540160", 
-        "292658692518576139", 
-        "292658692673765376", 
-        "292658692724097024"
-    ];
-    
     var team = getByName(input[1]);
     var teamStats = getStats(team);
     
     var rankStr = "";
     for(var i = 0; i < teamStats.ranks.length; i++){
         if(i != 0) rankStr += " / ";
-        rankStr += c.bot.emojis.get(rankEmojis[teamStats.ranks[i]]);
+        rankStr += c.bot.emojis.get(stat.rankEmojis[teamStats.ranks[i]]);
     }
     
     var retStr = "";
