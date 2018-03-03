@@ -203,7 +203,7 @@ module.exports.newTeam = function(message, input){
             var addUsers = input[5].substr(1, input[5].length).split(' ');
             var b = false;
             for(var i = 0; i < addUsers.length; i++){
-                var input2 = /<@(\d+)>/.exec(addUsers[i]);
+                var input2 = /<@!?(\d+)>/.exec(addUsers[i]);
                 var index = newTeam.members.indexOf(input2[1]);
                 if(index > -1){
                     if(!b){
