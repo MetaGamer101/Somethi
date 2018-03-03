@@ -168,7 +168,7 @@ module.exports.getTeam = function(message, input){
     for(var i = 0; i < teamStats.members.length; i++){
         retStr += stat.getSingleUserLine(teamStats.members[i]) + "\n";
     }
-    if(teamStats.subs.length > 0)retStr += "**-SUBS-**";
+    if(teamStats.subs.length > 0)retStr += "**-SUBS-**" + "\n";
     for(var i = 0; i < teamStats.subs.length; i++){
         retStr += stat.getSingleUserLine(teamStats.subs[i]) + "\n";
     }
