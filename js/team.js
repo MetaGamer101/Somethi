@@ -53,6 +53,15 @@ module.exports.all = function(){
     return teams;
 }
 
+module.exports.isCaptian = function(id){
+    for(var i = 0; i < teams.length; i++){
+        if(teams[i].captain == id){
+            return true;
+        }
+    }
+    return false;
+}
+
 function indexByName(name){
     for(var i = 0; i < teams.length; i++){
         if(teams[i].name == name){
@@ -231,6 +240,8 @@ module.exports.newTeam = function(message, input){
         message.channel.send({embed});
         teams.push(newTeam);
         save();
+        
+        user.updateUsernameById(message.author.id);
         
         c.bot.guilds.get(c.guildId).createRole({
             'name': newTeam.name,
@@ -447,5 +458,16 @@ module.exports.setCaptain = function(message, input){
     ;
     message.channel.send({embed});
     team.captain = input[3];
+    
+    //remove from members
+    var index = team.members.indexOf(input[3]);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+    //add current user to members
+    team.members.push(message.author.id);
+    
     updateTeam(team);
+    user.updateUsernameById(input[3]);
+    user.updateUsernameById(message.author.id);
 }

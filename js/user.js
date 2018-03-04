@@ -1,5 +1,7 @@
 var localStorage = require('node-localstorage').LocalStorage('./dat');
 var log = require('./log.js');
+var team = require('./team.js');
+var c = require('../config.js');
 
 var users = [];
 
@@ -104,5 +106,28 @@ module.exports.updateUser = function(userData){
     var i = indexById(userData.guildMemberId);
     users[i] = userData;
     save();
+}
+
+module.exports.updateUsernameById = function(id){
+    var user = getById(id);
+    if(team.isCaptian(id)){
+        try{
+            c.bot.guilds.get(c.guildId).members.get(id).setNickname('[★] ' + user.battleTagName).catch(function(){
+                log.error('probably because is admin');
+            });
+        }catch(e){
+            log.error('probably because is admin');
+            log.error(e);
+        }
+    }else{
+        try{
+            c.bot.guilds.get(c.guildId).members.get(id).setNickname(user.battleTagName).catch(function(){
+                log.error('probably because is admin');
+            });
+        }catch(e){
+            log.error('probably because is admin');
+            log.error(e);
+        }
+    }
 }
     
