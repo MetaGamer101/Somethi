@@ -237,6 +237,7 @@ function getTeamLine(team, stats){
     
     var ret = "";
     ret += teamrank + " " + team.name + " " + rankStr + " (" + stats.maxsr + " - " + stats.minsr + ")";
+    return ret;
 }
 
 module.exports.newTeam = function(message, input){
