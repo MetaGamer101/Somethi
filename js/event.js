@@ -26,12 +26,14 @@ function initMsgHandles(){
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Ss]ub [Aa]dd (<@!?(\d+)>)/, team.addSub);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Ss]ub [Rr]emove (<@!?(\d+)>)/, team.removeSub);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Cc]aptain (<@!?(\d+)>)/, team.setCaptain);
+    msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Nn]ame (\w[^<>@#]{2,31})/, team.setName);
     msgh(/^![Tt]eam [Gg]et (\w[^<>@#]{2,31})/, team.getTeam);
     msgh(/^!m.*/, core.repeat);
 //    msgh(/^!l.*/, stat.loadOld);
 }
 function initMinuteHandles(){
     minh(10, stat.refresh);
+    minh(10, team.refresh);
     minh(60, stat.update, -5);
 }
 
@@ -51,6 +53,7 @@ module.exports.ready = function(){
     log.info('ready');
     stat.update();
     stat.refresh();
+    team.refresh();
 };
 
 module.exports.message = function(message){

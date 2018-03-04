@@ -26,6 +26,10 @@ module.exports = {
     "statInfo": "REPLACE"
     //a channel dedicated to user statistics
     ,
+    //TEAMINFO
+    "teamInfo": "REPLACE"
+    //a channel dedicated to team statistics
+    ,
     //MOD ROLE
     "moderator": "REPLACE"
     //the moderator role

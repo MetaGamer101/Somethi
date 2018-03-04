@@ -159,15 +159,19 @@ function getStats(team){
     return res;
 }
 
+function getRankStr(ranks){
+    var ret = "";
+    for(var i = 0; i < ranks.length; i++){
+        if(i != 0) ret += " / ";
+        ret += c.bot.emojis.get(stat.rankEmojis[ranks[i]]);
+    }
+}
+
 module.exports.getTeam = function(message, input){
     var team = getByName(input[1]);
     var teamStats = getStats(team);
     
-    var rankStr = "";
-    for(var i = 0; i < teamStats.ranks.length; i++){
-        if(i != 0) rankStr += " / ";
-        rankStr += c.bot.emojis.get(stat.rankEmojis[teamStats.ranks[i]]);
-    }
+    var rankStr = getRankStr(teamStats.ranks);
     
     var retStr = "";
     retStr += team.name + ": " + rankStr + "\n";
@@ -185,6 +189,56 @@ module.exports.getTeam = function(message, input){
     message.channel.send(retStr);
 }
 
+module.exports.refresh = function(){
+    var channel = c.bot.guilds.get(c.guildId).channels.get(c.teamInfo);
+    channel.fetchMessages().then(messages => {
+        messages.forEach(message => {
+           message.delete();
+        });
+    });
+    
+    var tms = [];
+    for(var i = 0; i < teams.length; i++){
+        tms.push({
+            "team": teams[i],
+            "stats": getStats(teams[i])
+        });
+    }
+    tms.sort(function(a,b){
+        return b.stats.teamsr - a.stats.teamsr;
+    });
+    var teamstrs = [];
+    teamstrs.push("**Nexus Team Stats**");
+    var tmpteamstr = "";
+    for(var i = 0; i < tms.length; i++){
+        var teamLine = getTeamLine(tms[i].team, tms[i].stats);
+        if((tmpteamstr + "\n" + teamLine).length > 2000){
+            teamstrs.push(tmpteamstr);
+            tmpteamstr = "";
+        }
+        tmpteamstr += (tmpteamstr.length == 0 ? "" : "\n") + teamLine;
+    }
+    teamstrs.push(tmpteamstr); 
+    for(var i = 0; i < teamstrs.length; i++){
+        channel.send(teamstrs[i]);
+    }
+}
+
+function getTeamLine(team, stats){
+    var rankStr = getRankStr(stats.ranks);
+    
+    var teamrank = "`";
+    if(stats.teamsr == null) teamrank += "----";
+    else if(stats.teamsr < 10) teamrank += "---" + stats.teamsr.toString();
+    else if(stats.teamsr < 100) teamrank += "--" + stats.teamsr.toString();
+    else if(stats.teamsr < 1000) teamrank += "-" + stats.teamsr.toString();
+    else teamrank += stats.teamsr.toString();
+    teamrank += "`";
+    
+    var ret = "";
+    ret += teamrank + " " + team.name + " " + rankStr + " (" + stats.maxsr + " - " + stats.minsr + ")";
+}
+
 module.exports.newTeam = function(message, input){
     if(input[1] == undefined){
         message.channel.send('you forgot a team name!');
@@ -194,7 +248,7 @@ module.exports.newTeam = function(message, input){
 //                message.channel.sendMessage("You currently cannot create a team if you are captian of another");
 //                return;
 //            }
-            if(teams[i].name == input[2]){
+            if(teams[i].name.toLowerCase() == input[2].toLowerCase()){
                 message.channel.send("A team with that name already exists!");
                 return;
             }
@@ -470,4 +524,42 @@ module.exports.setCaptain = function(message, input){
     updateTeam(team);
     user.updateUsernameById(input[3]);
     user.updateUsernameById(message.author.id);
+}
+
+module.exports.setName = function(message, input){
+    var team = getByName(input[1]);
+    if(team == null){
+        message.channel.send("That team does not exist!");
+        return;
+    }
+    if(team.captain != message.author.id){
+        message.channel.send("Must be the captain!");
+        return;
+    }
+    
+    var oldName = team.name;
+    for(var i = 0; i < teams.length; i++){
+        if(teams[i].name.toLowerCase() == input[2].toLowerCase()){
+            message.channel.send("A team with that name already exists!");
+            return;
+        }
+        var ind = bannedTeamNames.indexOf(input[2]);
+        if(ind > -1){
+            message.channel.send("Cannot use a banned team name!");
+            return;
+        }
+    }
+    
+    team.name = input[2];
+    c.bot.guilds.get(c.guildId).roles.get(team.role).setName(team.name);
+    c.bot.guilds.get(c.guildId).channels.get(team.text).setName(team.name);
+    c.bot.guilds.get(c.guildId).channels.get(team.voice).setName(team.name);
+    
+    var embed = new c.Discord.RichEmbed()
+        .setTitle("Name Changed")
+        .setColor(team.color == null ? "#34363B" : team.color)
+        .setDescription(oldName + " -> " + team.name);
+    ;
+    message.channel.send({embed});
+    updateTeam(team);
 }

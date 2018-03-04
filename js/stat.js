@@ -190,9 +190,9 @@ function getSingleUserLine(u){
     str += " ";
     var rankStr = "`";
     if(u.rank == null) rankStr += "----";
-    else if(u.rank < 10) rankStr += "000" + u.rank.toString();
-    else if(u.rank < 100) rankStr += "00" + u.rank.toString();
-    else if(u.rank < 1000) rankStr += "0" + u.rank.toString();
+    else if(u.rank < 10) rankStr += "---" + u.rank.toString();
+    else if(u.rank < 100) rankStr += "--" + u.rank.toString();
+    else if(u.rank < 1000) rankStr += "-" + u.rank.toString();
     else rankStr += u.rank.toString();
     rankStr += "`";
     str += rankStr;
