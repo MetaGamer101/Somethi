@@ -165,6 +165,7 @@ function getRankStr(ranks){
         if(i != 0) ret += " / ";
         ret += c.bot.emojis.get(stat.rankEmojis[ranks[i]]);
     }
+    return ret;
 }
 
 module.exports.getTeam = function(message, input){
