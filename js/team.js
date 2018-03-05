@@ -200,10 +200,12 @@ module.exports.refresh = function(){
     
     var tms = [];
     for(var i = 0; i < teams.length; i++){
-        tms.push({
-            "team": teams[i],
-            "stats": getStats(teams[i])
-        });
+        if(teams[i].members.length + teams[i].subs.length >= 3){
+            tms.push({
+                "team": teams[i],
+                "stats": getStats(teams[i])
+            });   
+        }
     }
     tms.sort(function(a,b){
         return b.stats.teamsr - a.stats.teamsr;
