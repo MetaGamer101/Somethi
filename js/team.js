@@ -176,15 +176,15 @@ module.exports.getTeam = function(message, input){
     
     var retStr = "";
     retStr += team.name + ": " + rankStr + "\n";
-    retStr += "**" + (teamStats.teamsr == NaN ? ("Unranked**") : (teamStats.teamsr + "** (" + teamStats.maxsr + " - " + teamStats.minsr + ")")) + "\n";
-    retStr += stat.getSingleUserLine(teamStats.cap) + "\n";
+    retStr += "**" + (teamStats.teamsr.toString() == "NaN" ? ("Unranked**") : (teamStats.teamsr + "** (" + teamStats.maxsr + " - " + teamStats.minsr + ")")) + "\n";
+    if(teamStats.cap != null) retStr += stat.getSingleUserLine(teamStats.cap) + "\n";
     //Members
     for(var i = 0; i < teamStats.members.length; i++){
-        retStr += stat.getSingleUserLine(teamStats.members[i]) + "\n";
+        if(teamStats.members[i] != null) retStr += stat.getSingleUserLine(teamStats.members[i]) + "\n";
     }
     if(teamStats.subs.length > 0)retStr += "**-SUBS-**" + "\n";
     for(var i = 0; i < teamStats.subs.length; i++){
-        retStr += stat.getSingleUserLine(teamStats.subs[i]) + "\n";
+        if(teamStats.subs[i] != null) retStr += stat.getSingleUserLine(teamStats.subs[i]) + "\n";
     }
     //Subs
     message.channel.send(retStr);
@@ -231,7 +231,7 @@ function getTeamLine(team, stats){
     var rankStr = getRankStr(stats.ranks);
     
     var teamrank = "`";
-    if(stats.teamsr == null) teamrank += "----";
+    if(stats.teamsr == null || stats.teamsr.toString() == "NaN") teamrank += "----";
     else if(stats.teamsr < 10) teamrank += "---" + stats.teamsr.toString();
     else if(stats.teamsr < 100) teamrank += "--" + stats.teamsr.toString();
     else if(stats.teamsr < 1000) teamrank += "-" + stats.teamsr.toString();
@@ -239,7 +239,7 @@ function getTeamLine(team, stats){
     teamrank += "`";
     
     var ret = "";
-    ret += teamrank + " " + team.name + " " + rankStr + " (" + stats.maxsr + " - " + stats.minsr + ")";
+    ret += teamrank + " " + team.name + " " + rankStr + (stats.maxsr == -1 ? "" : (" (" + stats.maxsr + " - " + stats.minsr + ")"));
     return ret;
 }
 

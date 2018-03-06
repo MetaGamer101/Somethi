@@ -12,7 +12,7 @@ var userTemplate = {
     "platform": "pc",
     "region": "us",
     "heroCode": 0,
-    "rank": 0,
+    "rank": null,
     "rankType": 0
 };
 
