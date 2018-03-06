@@ -405,6 +405,7 @@ module.exports.addMember = function(message, input){
         message.channel.send("Cannot add the same member twice!");
         return;
     }else{
+        c.bot.guilds.get(c.guildId).members.get(input[3]).addRole(team.role);
         team.members.push(input[3]);
         var embed = new c.Discord.RichEmbed()
             .setTitle("Member Added")
@@ -428,6 +429,7 @@ module.exports.removeMember = function(message, input){
     }
     var index = team.members.indexOf(input[3]);
     if(index > -1){
+        c.bot.guilds.get(c.guildId).members.get(input[3]).removeRole(team.role);
         team.members.splice(index, 1);
         var embed = new c.Discord.RichEmbed()
             .setTitle("Member Removed")
@@ -461,6 +463,7 @@ module.exports.addSub = function(message, input){
         message.channel.send("Cannot add the same sub twice!");
         return;
     }else{
+        c.bot.guilds.get(c.guildId).members.get(input[3]).addRole(team.role);
         team.subs.push(input[3]);
         var embed = new c.Discord.RichEmbed()
             .setTitle("Sub Added")
@@ -484,6 +487,7 @@ module.exports.removeSub = function(message, input){
     }
     var index = team.subs.indexOf(input[3]);
     if(index > -1){
+        c.bot.guilds.get(c.guildId).members.get(input[3]).removeRole(team.role);
         team.subs.splice(index, 1);
         var embed = new c.Discord.RichEmbed()
             .setTitle("Sub Removed")
