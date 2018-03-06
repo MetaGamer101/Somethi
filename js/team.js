@@ -176,7 +176,7 @@ module.exports.getTeam = function(message, input){
     
     var retStr = "";
     retStr += team.name + ": " + rankStr + "\n";
-    retStr += "**" + teamStats.teamsr + "** (" + teamStats.maxsr + " - " + teamStats.minsr + ")" + "\n";
+    retStr += "**" + (teamStats.teamsr == NaN ? ("Unranked**") : (teamStats.teamsr + "** (" + teamStats.maxsr + " - " + teamStats.minsr + ")")) + "\n";
     retStr += stat.getSingleUserLine(teamStats.cap) + "\n";
     //Members
     for(var i = 0; i < teamStats.members.length; i++){
