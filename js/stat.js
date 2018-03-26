@@ -56,7 +56,6 @@ function updateUsers(ulist, callBack){
         if(u.battleTagName != null && u.battleTagName.length > 0){
             parse.getData(u.platform, u.region, u.battleTagName, u.battleTagNum, data => {
                 var badBT = false;
-                console.log(data);
                 if(data == null){
                     log.error('Seems like ' + u.battleTagName + '#' + u.battleTagNum + ' changed their name!');
                     badBT = true;
