@@ -180,7 +180,7 @@ module.exports.refresh = function(){
     }
     strs.push(tmpstr);
     for(var i = 0; i < strs.length; i++){
-        channel.send(strs[i]);
+        if(strs[i].length != 0)channel.send(strs[i]);
     }
 }
 

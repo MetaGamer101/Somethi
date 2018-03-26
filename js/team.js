@@ -223,7 +223,7 @@ module.exports.refresh = function(){
     }
     teamstrs.push(tmpteamstr); 
     for(var i = 0; i < teamstrs.length; i++){
-        channel.send(teamstrs[i]);
+        if(teamstrs[i].length != 0)channel.send(teamstrs[i]);
     }
 }
 
