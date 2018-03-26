@@ -63,13 +63,13 @@ function updateUsers(ulist, callBack){
                         var input = /<title>Application Error<\/title>/.exec(body);
                         if(input != null){
                             badBT = true;
-			    broken.push(u);
+                            broken.push(u);
                         }else{
                             //Huh??
                             log.error('Bad battletag on update??? ' + u.battleTagName + '#' + u.battleTagNum);
                             log.error('Here\'s what it said:\n' + body);
                             badBT = true;
-			    broken.push(u);
+                            broken.push(u);
                         }
                     }else{
                         log.error('json perse error was NOT syntax!');
@@ -97,12 +97,12 @@ function updateUsers(ulist, callBack){
                 }
             });
         }else{
-	    log.warn('null user: ' + u.guildMemberId);
-	    left --;
-	    if(left == 0){
-		callBack(broken);
-	    }
-	}
+            log.warn('null user: ' + u.guildMemberId);
+            left --;
+            if(left == 0){
+                callBack(broken);
+            }
+	   }
     });
 };
 
