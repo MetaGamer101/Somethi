@@ -5,6 +5,7 @@ var http = require('http');
 var log = require('./log.js');
 var hero = require('./hero.js');
 var team = require('./team.js');
+var parse = require('./parse.js');
 
 var rankEmojis = [
 	"419514920443576331", //unranked
@@ -53,42 +54,17 @@ function updateUsers(ulist, callBack){
     var broken = [];
     ulist.forEach(u => {
         if(u.battleTagName != null && u.battleTagName.length > 0){
-            getData(u.platform, u.region, u.battleTagName, u.battleTagNum, body => {
-                var data;
+            parse.getData(u.platform, u.region, u.battleTagName, u.battleTagNum, data => {
                 var badBT = false;
-                try{
-                    data = JSON.parse(body);
-                } catch(e){
-                    if(e instanceof SyntaxError){
-                        var input = /<title>Application Error<\/title>/.exec(body);
-                        if(input != null){
-                            badBT = true;
-                            broken.push(u);
-                        }else{
-                            //Huh??
-                            log.error('Bad battletag on update??? ' + u.battleTagName + '#' + u.battleTagNum);
-                            log.error('Here\'s what it said:\n' + body);
-                            badBT = true;
-                            broken.push(u);
-                        }
-                    }else{
-                        log.error('json perse error was NOT syntax!');
-                        throw(e);
-                    }
-                }
-                
-                if(!badBT && data.competitive == undefined){
+                console.log(data);
+                if(data == null){
                     log.error('Seems like ' + u.battleTagName + '#' + u.battleTagNum + ' changed their name!');
                     badBT = true;
                 }
 
                 if(!badBT){
-                    u.rank = data.competitive.rank;
-                    if(data.competitive.rank_img == null){
-                        u.rankType = 0;
-                    }else{
-                        u.rankType = parseInt(data.competitive.rank_img.split('')[data.competitive.rank_img.length - 5]);
-                    }
+                    u.rank = data.rank;
+                    u.rankType = data.portrait;
                     user.updateUser(u);
                 }
                 left--;
@@ -98,7 +74,7 @@ function updateUsers(ulist, callBack){
             });
         }else{
             log.warn('null user: ' + u.guildMemberId);
-            left --;
+            left--;
             if(left == 0){
                 callBack(broken);
             }
