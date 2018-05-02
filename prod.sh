@@ -1,1 +1,4 @@
-while true; do /bin/bash ./run.sh && break; done
+while true 
+do
+	/bin/bash run.sh
+done
