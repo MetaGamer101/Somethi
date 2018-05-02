@@ -105,6 +105,10 @@ var heroes = [
         "name": "Moira",
         "emoji": "376591947978244106",
         "regex": /moira/
+    },{
+        "name": "Brigitte",
+        "emoji": "437349231674654720",
+	"regex": /brig(itte)?/
     }
 ];
 

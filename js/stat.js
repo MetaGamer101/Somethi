@@ -53,6 +53,7 @@ function updateUsers(ulist, callBack){
     var left = ulist.length;
     var broken = [];
     ulist.forEach(u => {
+	log.info('running for ' + u.guildMemberId + ' bnet: ' + u.battleTagName + '#' + u.battleTagNum);
         if(u.battleTagName != null && u.battleTagName.length > 0){
             parse.getData(u.platform, u.region, u.battleTagName, u.battleTagNum, data => {
                 var badBT = false;
@@ -62,6 +63,7 @@ function updateUsers(ulist, callBack){
                 }
 
                 if(!badBT){
+		    log.info('success!');
                     u.rank = data.rank;
                     u.rankType = data.portrait;
                     user.updateUser(u);
@@ -82,6 +84,7 @@ function updateUsers(ulist, callBack){
 };
 
 module.exports.loadOld = function(message, input){
+    log.info('loadold');
     var oldUsers = JSON.parse(localStorage.getItem('oldusr'));
     for(var i = 0; i < oldUsers.all.length; i++){
         var curr = oldUsers.all[i];
@@ -99,6 +102,7 @@ module.exports.loadOld = function(message, input){
 }
 
 module.exports.listHeroes = function(message, input){
+    log.info('listing heroes for ' + message.author.id);
     var heroes = hero.getHeroes(user.get(message.author).heroCode);
     if(heroes.length == 0){
         message.channel.send("No heroes!");
@@ -114,13 +118,16 @@ module.exports.listHeroes = function(message, input){
 }
 
 module.exports.addHero = function(message, input){
+    log.info('adding hero ' + message.author.id);
     var u = user.get(message.author);
     var toggleData = hero.toggle(u.heroCode, input[2]);
     if(toggleData.newStatus == null){
         message.channel.send("Could not add hero");
     }else if(toggleData.newStatus){
+	log.info('result turned on');
         message.channel.send(input[2] + " has been turned **on**.");
     }else{// !u.newStatus
+	log.info('result turned off');
         message.channel.send(input[2] + " has been turned **off**.");
     }
     u.heroCode = toggleData.heroCode;
@@ -128,6 +135,7 @@ module.exports.addHero = function(message, input){
 }
 
 module.exports.refresh = function(){
+    log.info('refreshing stat info');
     var channel = c.bot.guilds.get(c.guildId).channels.get(c.statInfo);
     channel.fetchMessages().then(messages => {
         messages.forEach(message => {
@@ -185,11 +193,21 @@ function getSingleUserLine(u){
 module.exports.getSingleUserLine = getSingleUserLine;
 
 module.exports.add = function(message, input){
+    log.info('adding stat entry');
     var battleTagName = input[2];
     var battleTagNum = input[3];
-    var u = user.get(message.author);
-    if(u == null){
-        u = user.newUser(message.author);
+    log.info(battleTagName + '#' + battleTagNum);
+    var u = null;
+    if(input[5] == undefined){
+	u = user.get(message.author);
+	if(u == null){
+            u = user.newUser(message.author);
+	}
+    }else{
+	u = user.getById(input[5]);
+	if(u == null){
+            u = user.newUserById(input[5]);
+        }
     }
 //    try{
 //        var b = false;
@@ -210,7 +228,7 @@ module.exports.add = function(message, input){
     u.battleTagName = battleTagName;
     u.battleTagNum = battleTagNum;
     user.updateUser(u);
-    user.updateUsernameById(message.author.id);
+    user.updateUsernameById(u.guildMemberId);
     log.info('Added STATS listing for ' + battleTagName + '#' + battleTagNum);
     message.channel.send('Added STATS listing for ' + battleTagName + '#' + battleTagNum);
 }

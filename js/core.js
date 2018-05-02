@@ -14,6 +14,15 @@ module.exports.repeat = function(message, input){
     log.info('sent by: ' + message.author.id);
 }
 
+module.exports.crash = function(message, input){
+	if(c.bot.guilds.get(c.guildId).members.get(message.author.id).roles.array().includes(c.bot.guilds.get(c.guildId).roles.get(c.moderator))){
+		log.warn('crashing!');
+		throw "Controlled Crash";
+	}else{
+		message.channel.send("lol nope");
+	}
+}
+
 ////////
 //
 //  LOCKDOWN

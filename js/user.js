@@ -17,6 +17,7 @@ var userTemplate = {
 };
 
 module.exports.start = function(){
+    log.info('starting up user parse');
 //    localStorage.setItem('users', JSON.stringify(users));
 //    console.log(Object.keys(localStorage.getItem('users')));
 //    uncomment above if you want to reset users.
@@ -41,6 +42,10 @@ module.exports.start = function(){
     }
 };
 
+module.exports.isMod = function(id){
+	return c.bot.guilds.get(c.guildId).members.get(id).roles.keyArray().includes(c.moderator);
+}
+
 module.exports.newUser = function(guildMember){
     return newUserById(guildMember.id);
 };
@@ -48,6 +53,7 @@ module.exports.newUser = function(guildMember){
 module.exports.newUserById = newUserById;
 
 function newUserById(guildMemberId){
+    log.info('creating new user with id' + guildMemberId);
     var newUser = JSON.parse(JSON.stringify(userTemplate)); // Create a new user from template
     newUser.guildMemberId = guildMemberId;                      // Give it the correct guildMember
     users.push(newUser);                                    // Add it to the users array
@@ -74,6 +80,7 @@ function save(){
 module.exports.get = get;
 
 function get(guildMember){
+    log.info('fetching guildMember ' + guildMember.id);
     for(var i = 0; i < users.length; i++){
         if(users[i].guildMemberId == guildMember.id){
             return users[i];
@@ -85,6 +92,7 @@ function get(guildMember){
 module.exports.getById = getById;
 
 function getById(id){
+    log.info('fetching guildMember ' + id);
     for(var i = 0; i < users.length; i++){
         if(users[i].guildMemberId == id){
             return users[i];
@@ -94,6 +102,7 @@ function getById(id){
 }
 
 function indexById(guildMemberId){
+    log.info('fetching index for ' + guildMemberId);
     for(var i = 0; i < users.length; i++){
         if(users[i].guildMemberId == guildMemberId){
             return i;
@@ -103,14 +112,17 @@ function indexById(guildMemberId){
 }
 
 module.exports.updateUser = function(userData){
+    log.info('updating ' + userData.guildMemberId);
     var i = indexById(userData.guildMemberId);
+    log.info('inserting at ' + i);
     users[i] = userData;
     save();
 }
 
 module.exports.updateUsernameById = function(id){
+    log.info('changing username to match battletag');
     var user = getById(id);
-    if(team.isCaptian(id)){
+    if(team.isCaptain(id)){
         try{
             c.bot.guilds.get(c.guildId).members.get(id).setNickname('[★] ' + user.battleTagName).catch(function(){
                 log.error('probably because is admin');

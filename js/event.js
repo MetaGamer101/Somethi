@@ -15,11 +15,11 @@ var tick = 0;
 function initMsgHandles(){
     msgh(/^![Ll]ockdown ( ?\d+ ?[HhMmSs])+$/, core.lockdown);
     msgh(/^(![Ss]tats [Hh][ae]lp)$/, stat.help);
-    msgh(/^![Ss]tats [Aa]dd ((\w+)#(\d+))$/, stat.add);
+    msgh(/^![Ss]tats [Aa]dd ((\w+)#(\d+))( M(\d+))?$/, stat.add);
     msgh(/^(![Hh]eroe?s)$/, stat.listHeroes);
     msgh(/^![Ss]tats [Gg]et ((\w+)#(\d+))(.*)$/, stat.get);
     msgh(/^![Hh]ero(e?s)? (.+)$/, stat.addHero);
-    msgh(/^![Tt]eam [Cc]reate( (\w[^<>@#]{2,31})( (#[0-9a-fA-F]{6}))?(( (<@!?\d+>))+)?)?$/, team.newTeam);
+    msgh(/^![Tt]eam [Cc]reate( (\w[^<>@#]{2,31})( (#[0-9a-fA-F]{6}))?(( (<@!?\d+>))+)?( T(\d+) V(\d+) R(\d+))?)?$/, team.newTeam);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Cc]olor (#[0-9a-fA-F]{6})/, team.setColor);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Mm]ember [Aa]dd (<@!?(\d+)>)/, team.addMember);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Mm]ember [Rr]emove (<@!?(\d+)>)/, team.removeMember);
@@ -28,6 +28,7 @@ function initMsgHandles(){
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Cc]aptain (<@!?(\d+)>)/, team.setCaptain);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Nn]ame (\w[^<>@#]{2,31})/, team.setName);
     msgh(/^![Tt]eam [Gg]et (\w[^<>@#]{2,31})/, team.getTeam);
+    msgh(/^![Cc]rash$/, core.crash);
     msgh(/^!m.*/, core.repeat);
 //    msgh(/^!l.*/, stat.loadOld);
 }
@@ -65,6 +66,7 @@ module.exports.message = function(message){
                 mh.func(message, input);
                 return;
             }catch(e){
+		if(e == "Controlled Crash") throw e;
                 log.error('MH FUNC ERROR: ' + mh.regex);
                 log.error(e);
 		log.error(e.stack == undefined ? 'no further information.' : e.stack);
