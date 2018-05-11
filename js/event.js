@@ -18,7 +18,7 @@ function initMsgHandles(){
     msgh(/^![Ss]tats [Aa]dd ((\w+)#(\d+))( M(\d+))?$/, stat.add);
     msgh(/^(![Hh]eroe?s)$/, stat.listHeroes);
     msgh(/^![Ss]tats [Gg]et ((\w+)#(\d+))(.*)$/, stat.get);
-    msgh(/^![Hh]ero(e?s)? (.+)$/, stat.addHero);
+    msgh(/^![Hh]ero(e?s)? (.+)( M(\d+))?$/, stat.addHero);
     msgh(/^![Tt]eam [Cc]reate( (\w[^<>@#]{2,31})( (#[0-9a-fA-F]{6}))?(( (<@!?\d+>))+)?( T(\d+) V(\d+) R(\d+))?)?$/, team.newTeam);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Cc]olor (#[0-9a-fA-F]{6})/, team.setColor);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Mm]ember [Aa]dd (<@!?(\d+)>)/, team.addMember);

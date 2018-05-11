@@ -18,6 +18,8 @@ var rankEmojis = [
 	"292658692724097024"  //grandmaster
 ];
 
+var top5emoji = "1";
+
 module.exports.rankEmojis = rankEmojis;
 
 module.exports.update = function(){
@@ -119,7 +121,12 @@ module.exports.listHeroes = function(message, input){
 
 module.exports.addHero = function(message, input){
     log.info('adding hero ' + message.author.id);
-    var u = user.get(message.author);
+    var u = null;
+    if(input[4] == undefined || user.isMod(message.author.id)){
+        u = user.get(message.author);
+    }else{
+        u = user.getById(input[4]);
+    }
     var toggleData = hero.toggle(u.heroCode, input[2]);
     if(toggleData.newStatus == null){
         message.channel.send("Could not add hero");
@@ -167,7 +174,8 @@ module.exports.refresh = function(){
     }
 }
 
-function getSingleUserLine(u){
+function getSingleUserLine(u, top5){
+	if(top5 == undefined) top5 = false;
     var str = "";
     str += c.bot.emojis.get(rankEmojis[u.rankType]);
     str += " ";
@@ -179,6 +187,10 @@ function getSingleUserLine(u){
     else rankStr += u.rank.toString();
     rankStr += "`";
     str += rankStr;
+	if(top5){
+		str += " ";
+		str += c.bot.emojis.get(top5emoji);
+	}
     str += " ";
     str += u.battleTagName;
         str += "#";
