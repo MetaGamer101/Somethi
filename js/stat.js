@@ -19,6 +19,7 @@ var rankEmojis = [
 ];
 
 var top5emoji = "1";
+var showTop5 = false;
 
 module.exports.rankEmojis = rankEmojis;
 
@@ -156,10 +157,14 @@ module.exports.refresh = function(){
 	   return b.rank - a.rank;
     });
     var tmpstr = "";
+	var inT5 = 0
     for(var i = 0; i < users.length; i++){
         if(users[i].rank == undefined || users[i].rank == 0) continue;
         var str = "";
-        str += getSingleUserLine(users[i]);
+        str += getSingleUserLine(users[i], (showTop5 && (inT5 < 5)));
+		if(inT5 < 5){
+			inT5++;
+		}
         str += "\n";
         if((tmpstr + str).length > 2000){
                 strs.push(tmpstr);
