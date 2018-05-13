@@ -3,111 +3,111 @@ var c = require('../config.js');
 var heroes = [
     {
         "name": "Genji",
-        "emoji": "292715541318205440",
+        "emoji": "445067373557579776",
         "regex": /g[ea]nji|g[ea]ngoo/
     },{
         "name": "McCree",
-        "emoji": "292715541410349056",
+        "emoji": "445067373289144332",
         "regex": /mccree|magoo/
     },{
         "name": "Pharah",
-        "emoji": "292715541427126275",
+        "emoji": "445067373465305088",
         "regex": /pharah|bird/
     },{
         "name": "Reaper",
-        "emoji": "292715541267873793",
+        "emoji": "445067373100269580",
         "regex": /reaper|emo|rng/
     },{
         "name": "Soldier: 76",
-        "emoji": "292715541397766146",
+        "emoji": "445067373251395604",
         "regex": /soldier(: )?(76)?/
     },{
         "name": "Tracer",
-        "emoji": "292715542064922625",
+        "emoji": "445067373121110018",
         "regex": /tracer|trace?y/
     },{
         "name": "Bastion",
-        "emoji": "292715540563099648",
+        "emoji": "445067372240437269",
         "regex": /bastion|beep/
     },{
         "name": "Hanzo",
-        "emoji": "292715541095907329",
+        "emoji": "445067373511180288",
         "regex": /hanzo|handsoap/
     },{
         "name": "Junkrat",
-        "emoji": "292715541897150464",
+        "emoji": "445067373066584105",
         "regex": /junkrat|junk|rat|trashmouse/
     },{
         "name": "Mei",
-        "emoji": "292715541183856647",
+        "emoji": "445067373578289153",
         "regex": /mei|satan/
     },{
         "name": "Torbjörn",
-        "emoji": "292715542261792768",
+        "emoji": "445067373213515783",
         "regex": /torbj(o|ö)rn|tobler(o|ö)ne/
     },{
         "name": "Widowmaker",
-        "emoji": "292715543755227136",
+        "emoji": "445067373318504460",
         "regex": /widow(maker)?|wondowmaker|wimblebimble/
     },{
         "name": "D.Va",
-        "emoji": "292715540261109761",
+        "emoji": "445067373570162695",
         "regex": /d.?va|deev/
     },{
         "name": "Reinhardt",
-        "emoji": "292715541687304192",
+        "emoji": "445067373456916500",
         "regex": /rein(hardt)?/
     },{
         "name": "Roadhog",
-        "emoji": "292715542018523136",
+        "emoji": "445067373481951242",
         "regex": /roadhog|road|hog|streetpig|highwayswine/
     },{
         "name": "Winston",
-        "emoji": "292715542257860608",
+        "emoji": "445067373452460034",
         "regex": /winston|mrtickle|scientist/
     },{
         "name": "Zarya",
-        "emoji": "292715542253535242",
+        "emoji": "445067373574225921",
         "regex": /zarya/
     },{
         "name": "Lúcio",
-        "emoji": "292715541322399745",
+        "emoji": "445067373230161921",
         "regex": /l(u|ú)cio|frog/
     },{
         "name": "Mercy",
-        "emoji": "292715541448097793",
+        "emoji": "445067373356253205",
         "regex": /mercy/
     },{
         "name": "Symmetra",
-        "emoji": "292715541951414273",
+        "emoji": "445067373402128384",
         "regex": /symm?(etra)?/
     },{
         "name": "Zenyatta",
-        "emoji": "292715542173712384",
+        "emoji": "445067372928172045",
         "regex": /zenyatta|zenny/
     },{
         "name": "Ana",
-        "emoji": "292715540483407872",
+        "emoji": "445067373527957504",
         "regex": /ana/
     },{
         "name": "Sombra",
-        "emoji": "292715541884436481",
+        "emoji": "445067373423230976",
         "regex": /sombra|sombrero|simba|cilantro/
     },{
         "name": "Orisa",
-        "emoji": "292715541855076352",
+        "emoji": "445067373570162696",
         "regex": /orisa|moo|cow|horse|neigh/
     },{
         "name": "Doomfist",
-        "emoji": "354421751360258049",
+        "emoji": "445067373406584832",
         "regex": /doomfist|doom|fist|onepunchman/
     },{
         "name": "Moira",
-        "emoji": "376591947978244106",
+        "emoji": "445067373712637972",
         "regex": /moira/
     },{
         "name": "Brigitte",
-        "emoji": "437349231674654720",
+        "emoji": "445067373423230976",
 	"regex": /brig(itte)?/
     }
 ];

@@ -8,14 +8,14 @@ var team = require('./team.js');
 var parse = require('./parse.js');
 
 var rankEmojis = [
-	"419514920443576331", //unranked
-	"292658692069785600", //bronze
-	"292658692162322432", //silver
-	"292658691784704002", //gold
-	"292658692296540160", //platinum
-	"292658692518576139", //diamond
-	"292658692673765376", //master
-	"292658692724097024"  //grandmaster
+	"445071071591530518", //unranked
+	"445067370550132747", //bronze
+	"445067371997036557", //silver
+	"445067372144099338", //gold
+	"445067373695860736", //platinum
+	"445067371024220160", //diamond
+	"445067373574225931", //master
+	"445067373561511937"  //grandmaster
 ];
 
 var top5emoji = "1";
@@ -185,7 +185,7 @@ function getSingleUserLine(u, top5){
     str += c.bot.emojis.get(rankEmojis[u.rankType]);
     str += " ";
     var rankStr = "`";
-    if(u.rank == null) rankStr += "----";
+    if(u.rank == null || u.rank == '') rankStr += "----";
     else if(u.rank < 10) rankStr += "---" + u.rank.toString();
     else if(u.rank < 100) rankStr += "--" + u.rank.toString();
     else if(u.rank < 1000) rankStr += "-" + u.rank.toString();

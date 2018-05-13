@@ -103,24 +103,31 @@ function getStats(team){
     var j = 0;
     while(i < team.members.length || j < team.subs.length){
         var usr = null;
+		//include no rank as a rank in the rankstr
+		if(usr == undefined || usr == null || usr.rank == null || usr.rank == ''){
+			var indd = res.ranks.indexOf(0);
+			if(indd <= -1){
+				res.ranks.push(0);	
+			}	
+		}
         if(i == -1){
             usr = user.getById(team.captain);
             i++;
             if(usr == undefined || usr == null) continue;
             res.cap = usr;
-            if(usr.rank == null) continue;
+            if(usr.rank == null || usr.rank == '') continue;
         }else if(i < team.members.length){
             usr = user.getById(team.members[i]);
             i++;
             if(usr == undefined || usr == null) continue;
             res.members.push(usr);
-            if(usr.rank == null) continue;
+            if(usr.rank == null || usr.rank == '') continue;
         }else{
             usr = user.getById(team.subs[j]);
             j++;
             if(usr == undefined || usr == null) continue;
             res.subs.push(usr);
-            if(usr.rank == null) continue;
+            if(usr.rank == null || usr.rank == '') continue;
         }
         
         //for max sr
@@ -128,7 +135,7 @@ function getStats(team){
         //for min sr
         res.minsr = res.minsr == -1 ? usr.rank : Math.min(res.minsr, usr.rank);
         //for team sr
-        res.teamsr += usr.rank;
+        res.teamsr = parseInt(res.teamsr) + parseInt(usr.rank);
         srdiv++;
         
         //for list or ranks
@@ -139,10 +146,13 @@ function getStats(team){
     }
     
     //get avg
-    res.teamsr = Math.round(res.teamsr / srdiv);
+	if(res.teamsr != undefined && res.teamsr != 0) res.teamsr = Math.round(res.teamsr / srdiv);
+	else res.teamsr = null;
     
     //sort ranks
     res.ranks.sort(function(a,b){
+		if(a == null || a == '') return 1;
+		if(b == null || b == '') return -1;
         return b - a;
     });
     
@@ -176,7 +186,7 @@ module.exports.getTeam = function(message, input){
     
     var retStr = "";
     retStr += team.name + ": " + rankStr + "\n";
-    retStr += "**" + (teamStats.teamsr.toString() == "NaN" ? ("Unranked**") : (teamStats.teamsr + "** (" + teamStats.maxsr + " - " + teamStats.minsr + ")")) + "\n";
+    retStr += "**" + (teamStats.teamsr == null ? ("Unranked**") : (teamStats.teamsr + "** (" + teamStats.maxsr + " - " + teamStats.minsr + ")")) + "\n";
     if(teamStats.cap != null) retStr += stat.getSingleUserLine(teamStats.cap) + "\n";
     //Members
     for(var i = 0; i < teamStats.members.length; i++){
@@ -208,6 +218,8 @@ module.exports.refresh = function(){
         }
     }
     tms.sort(function(a,b){
+		if(a.stats.teamsr == null || a.stats.teamsr == '') return 1;
+		if(b.stats.teamsr == null || b.stats.teamsr == '') return -1;
         return b.stats.teamsr - a.stats.teamsr;
     });
     var teamstrs = [];
@@ -310,7 +322,7 @@ module.exports.newTeam = function(message, input){
                 'color': newTeam.color,
                 'permissions': 0,
                 'mentionable': true,
-                'hoist': true
+                'hoist': false 
             }).then(role => {
                 onTeamRole(role, newTeam, input, message);
             });
@@ -604,4 +616,43 @@ module.exports.setName = function(message, input){
     ;
     message.channel.send({embed});
     updateTeam(team);
+}
+
+module.exports.remove = function(message, input){
+    var team = getByName(input[1]);
+	var teamIndex = indexByName(input[1]);
+    if(team == null){
+        message.channel.send("That team does not exist!");
+        return;
+    }
+    if(!isCaptain(message.author.id, team.captain)){
+        message.channel.send("Must be the captain!");
+        return;
+    }
+	
+	teams.splice(teamIndex, 1);		
+
+	try{
+		c.bot.guilds.get(c.guildId).roles.get(team.role).delete();
+	}catch(e){
+		log.error(e);
+	}
+	try{
+		c.bot.guilds.get(c.guildId).channels.get(team.text).delete();
+	}catch(e){
+		log.error(e);
+	}
+	try{
+		c.bot.guilds.get(c.guildId).channels.get(team.voice).delete();
+	}catch(e){
+		log.error(e);
+	}
+	
+	save();    
+    
+    var embed = new c.Discord.RichEmbed()
+        .setTitle("Deleted " + team.name)
+        .setColor(team.color == null ? "#34363B" : team.color)
+    ;
+    message.channel.send({embed});
 }

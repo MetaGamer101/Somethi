@@ -3,10 +3,12 @@ var log = require('./log.js');
 var moment = require('moment');
 
 module.exports.guildMemberAdd = function(guildMember){
+	if(guildMember.guild.id != c.guildId) return;
     guildMember.addRole(c.baseRole);
+	c.bot.guilds.get(c.guildId).channels.get(c.joinleave).send("Welcome " + guildMember + " to The Nexus!");
 }
 module.exports.guildMemberRemove = function(guildMember){
-    
+	if(guildMember.guild.id == c.guildId) c.bot.guilds.get(c.guildId).channels.get(c.joinleave).send(guildMember + " has left.");
 }
 
 module.exports.repeat = function(message, input){

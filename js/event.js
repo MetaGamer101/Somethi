@@ -27,6 +27,7 @@ function initMsgHandles(){
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Ss]ub [Rr]emove (<@!?(\d+)>)/, team.removeSub);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Cc]aptain (<@!?(\d+)>)/, team.setCaptain);
     msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Nn]ame (\w[^<>@#]{2,31})/, team.setName);
+    msgh(/^![Tt]eam [Ee]dit (\w[^<>@#]{2,31}) [Dd]elete/, team.remove);
     msgh(/^![Tt]eam [Gg]et (\w[^<>@#]{2,31})/, team.getTeam);
     msgh(/^![Cc]rash$/, core.crash);
     msgh(/^!m.*/, core.repeat);
@@ -39,7 +40,7 @@ function initMinuteHandles(){
 }
 
 module.exports.ready = function(){
-    log.info('INFO');
+    log.info('READY');
     var roles = c.bot.guilds.get(c.guildId).roles.array();
     roles.forEach(role => {
         if(role.name == "@everyone"){
@@ -62,14 +63,15 @@ module.exports.message = function(message){
         var mh = msgmap[i];
         var input = mh.regex.exec(message.content);
         if(input != null){
+			log.info('Got message from ' + message.author.id);
             try{
                 mh.func(message, input);
                 return;
             }catch(e){
-		if(e == "Controlled Crash") throw e;
-                log.error('MH FUNC ERROR: ' + mh.regex);
+				if(e == "Controlled Crash") throw e;
+                log.error('MsgH FUNC ERROR: ' + mh.regex);
                 log.error(e);
-		log.error(e.stack == undefined ? 'no further information.' : e.stack);
+				log.error(e.stack == undefined ? 'no further information.' : e.stack);
             }
         }
     }
@@ -81,7 +83,7 @@ module.exports.guildMemberAdd = function(guildMember){
 };
 
 module.exports.guildMemberRemove = function(guildMember){
-    core.guildMemberReomve(guildMember);
+    core.guildMemberRemove(guildMember);
 };
 
 
@@ -105,7 +107,7 @@ function runTick(){
             try{
                 mh.func();
             }catch(e){
-                log.error('MH FUNC ERROR: ' + mh.regex);
+                log.error('MinH FUNC ERROR: ' + mh.regex);
                 log.error(e);
 		log.error(e.stack == undefined ? 'no further information.' : e.stack);
             }

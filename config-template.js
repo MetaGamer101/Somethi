@@ -53,4 +53,8 @@ module.exports = {
     //TEAM VOICE CHANNEL CATEGORY
     "tv": "REPLACE"
     //id for team voice channels category
+	,
+    //JOIN LEAVE CHANNEL
+    "joinleave": "REPLACE"
+    //id for the join leave channel
 }

@@ -15,5 +15,6 @@ process.on('unhandledRejection', err => console.error('Uncaught Promise Error: \
 bot.on('ready', event.ready);
 bot.on('message', event.message);
 bot.on('guildMemberAdd', event.guildMemberAdd);
+bot.on('guildMemberRemove', event.guildMemberRemove);
 bot.login(c.token);
 
