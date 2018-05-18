@@ -18,6 +18,8 @@ var rankEmojis = [
 	"445067373561511937"  //grandmaster
 ];
 
+var needsRefresh = false;
+
 var top5emoji = "1";
 var showTop5 = false;
 
@@ -27,28 +29,33 @@ module.exports.update = function(){
     log.info('updating all');
     var firstRun = user.all();
     updateUsers(firstRun, secondRun => {
-   	if(secondRun.length > 0){
-	    log.info('second update wave');
-	    updateUsers(secondRun, thirdRun => {
-	        if(thirdRun.length > 0){
-		    log.info('third update wave');
-		    updateUsers(thirdRun, bad => {
-			log.info('finished update!');
-                if(bad.length > 0){
-                    log.warn('the following did not return after three tries');
-                    for(var i = 0; i < bad.length; i++){
-                        log.warn(bad[i].battleTagName + '#' + bad[i].battleTagNum);
-                    }
-                }
-		    });
-		}else{
-		    log.info('finished update!');
-		}	
-	    });
-	}else{
-	    log.info('finished update!');
-	}	
-    });
+//		if(secondRun.length > 0){
+//			log.info('second update wave');
+//			updateUsers(secondRun, thirdRun => {
+//				if(thirdRun.length > 0){
+//				log.info('third update wave');
+//				updateUsers(thirdRun, bad => {
+//				log.info('finished update!');
+//					if(bad.length > 0){
+//						log.warn('the following did not return after three tries');
+//						for(var i = 0; i < bad.length; i++){
+//							log.warn(bad[i].battleTagName + '#' + bad[i].battleTagNum);
+//						}
+//					}
+//				});
+//			}else{
+//				log.info('finished update!');
+//			}	
+//			});
+//		}else{
+//			log.info('finished update!');
+//		}	
+		log.info('update completed with ' + secondRun.length + ' users with errors!');
+		for(var i = 0; i < secondRun.length; i++){
+			log.warn(secondRun[i].battleTagName + '#' + secondRun[i].battleTagNum + ' had errors!');
+		}
+		refresh();
+	});
 }
 
 function updateUsers(ulist, callBack){
@@ -67,7 +74,10 @@ function updateUsers(ulist, callBack){
 
                 if(!badBT){
 		    log.info('success!');
+					var oldU = JSON.stringify(u);
                     u.rank = data.rank;
+					var newU = JSON.stringify(u);
+					if(oldU != newU) needsRefresh = true;
                     u.rankType = data.portrait;
                     user.updateUser(u);
                 }
@@ -140,9 +150,15 @@ module.exports.addHero = function(message, input){
     }
     u.heroCode = toggleData.heroCode;
     user.updateUser(u);
+	needsRefresh = true;
 }
-
-module.exports.refresh = function(){
+module.exports.refresh = refresh;
+function refresh(){
+	if(!needsRefresh){
+		log.info('did not need refresh');
+		return;
+	}
+	needsRefresh = false;
     log.info('refreshing stat info');
     var channel = c.bot.guilds.get(c.guildId).channels.get(c.statInfo);
     channel.fetchMessages().then(messages => {
@@ -216,10 +232,10 @@ module.exports.add = function(message, input){
     log.info(battleTagName + '#' + battleTagNum);
     var u = null;
     if(input[5] == undefined){
-	u = user.get(message.author);
-	if(u == null){
-            u = user.newUser(message.author);
-	}
+		u = user.get(message.author);
+		if(u == null){
+			u = user.newUser(message.author);
+		}
     }else{
 	u = user.getById(input[5]);
 	if(u == null){
