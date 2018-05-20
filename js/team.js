@@ -21,6 +21,7 @@ var teamTemplate = {
 };
 
 module.exports.start = function(){
+	log.info('team.js start');
 //    console.log(c.Discord.Permissions.FLAGS);
     teams = JSON.parse(localStorage.getItem('teams'));
     var keys = Object.keys(teamTemplate);
@@ -46,14 +47,17 @@ module.exports.start = function(){
 module.exports.save = save;
 
 function save(){
+	log.info('team.js save');
     localStorage.setItem('teams', JSON.stringify(teams));
 }
 
 module.exports.all = function(){
+	log.info('team.js all');
     return teams;
 }
 
 function isCaptain(id, teamCap){
+	log.info('team.js isCaptain(' + id + ', ' + teamCap + ')');
     if(user.isMod(id)) return true;
     if(id == teamCap) return true;
     return false;
@@ -62,6 +66,7 @@ function isCaptain(id, teamCap){
 module.exports.isCaptain = isCaptain;
 
 function indexByName(name){
+	log.info('team.js indexByName(' + name + ')');
     for(var i = 0; i < teams.length; i++){
         if(teams[i].name == name){
             return i;
@@ -71,6 +76,7 @@ function indexByName(name){
 }
 
 function getByName(name){
+	log.indo('team.js getByName(' + name + ')');
     for(var i = 0; i < teams.length; i++){
 	log.info("\"" + name + "\"" + ' == ' + "\"" + teams[i].name + "\"");
         if(teams[i].name == name){
@@ -81,12 +87,14 @@ function getByName(name){
 }
 
 function updateTeam(team){
+	log.info('team.js updateTeam(\'' + team.name + '\')');
     var i = indexByName(team.name);
     teams[i] = team;
     save();
 }
 
 function getStats(team){
+	log.info('getStats(\'' + team.name + '\')');
     var res = {
         "ranks": [],
         "teamsr": 0,
@@ -170,6 +178,7 @@ function getStats(team){
 }
 
 function getRankStr(ranks){
+	log.info('team.js getRankStr(ranks(len:' + ranks.length + '))');
     var ret = "";
     for(var i = 0; i < ranks.length; i++){
         if(i != 0) ret += " / ";
@@ -179,6 +188,7 @@ function getRankStr(ranks){
 }
 
 module.exports.getTeam = function(message, input){
+	log.info('team.js getTeam');
     var team = getByName(input[1]);
     var teamStats = getStats(team);
     
@@ -201,6 +211,7 @@ module.exports.getTeam = function(message, input){
 }
 
 module.exports.refresh = function(){
+	log.info('team.js refresh');
     var channel = c.bot.guilds.get(c.guildId).channels.get(c.teamInfo);
     channel.fetchMessages().then(messages => {
         messages.forEach(message => {
@@ -240,6 +251,7 @@ module.exports.refresh = function(){
 }
 
 function getTeamLine(team, stats){
+	log.info('team.js getTeamLine(\'' + team.name + '\', stats)');
     var rankStr = getRankStr(stats.ranks);
     
     var teamrank = "`";
@@ -256,6 +268,7 @@ function getTeamLine(team, stats){
 }
 
 module.exports.newTeam = function(message, input){
+	log.info('team.js newTeam');
     if(input[9] != undefined && !user.isMod(message.author.id)){
         message.channel.send('you cannot specify channels and a role if you are not a mod'); 
 	    return;
@@ -263,6 +276,7 @@ module.exports.newTeam = function(message, input){
     if(input[1] == undefined){
         message.channel.send('you forgot a team name!');
     }else{
+		log.info('passed first tests');
         for(var i = 0; i < teams.length; i++){
 //            if(teams[i].captain == message.author.id){
 //                message.channel.sendMessage("You currently cannot create a team if you are captian of another");
@@ -278,6 +292,7 @@ module.exports.newTeam = function(message, input){
                 return;
             }
         }
+		log.info('creating new team!');
         var newTeam = JSON.parse(JSON.stringify(teamTemplate));
         newTeam.captain = message.author.id;
         newTeam.name = input[2];
@@ -334,6 +349,7 @@ module.exports.newTeam = function(message, input){
 }
 
 function onTeamRole(role, newTeam, input, message){
+	log.info('team.js onTeamRole(' + role.id + ', ' + newTeam.name + ', input, message)');
     newTeam.role = role.id;
     if(input[9] == undefined){
         c.bot.guilds.get(c.guildId).createChannel(newTeam.name, 'text', [
@@ -375,6 +391,7 @@ function onTeamRole(role, newTeam, input, message){
 
 
 function onTeamText(role, newTeam, channel, input){
+	log.info('team.js onTeamText(' + role.id + ', ' + newTeam.name + ', ' + channel.id + ', input)');
 	channel.setParent(c.tt).then(channel2 => {
 	    channel2.overwritePermissions(c.bot.guilds.get(c.guildId).me, {
 		    'VIEW_CHANNEL': true
@@ -399,6 +416,7 @@ function onTeamText(role, newTeam, channel, input){
 }
 
 function onTeamVoice(role, newTeam, channel, input){
+	log.info('team.js onTeamVoice(' + role.id + ', ' + newTeam.name + ', ' + channel.id + ', input)');
 	channel.setParent(c.tv).then(channel2 => {
 	    channel2.overwritePermissions(c.everyone, {
 		    'VIEW_CHANNEL': false
@@ -412,6 +430,7 @@ function onTeamVoice(role, newTeam, channel, input){
 }
 
 module.exports.setColor = function(message, input){
+	log.info('team.js setColor');
     var team = getByName(input[1]);
     if(team == null){
         message.channel.sendMessage("That team does not exist!");
@@ -432,6 +451,7 @@ module.exports.setColor = function(message, input){
 }
 
 module.exports.addMember = function(message, input){
+	log.info('team.js addMember');
     var team = getByName(input[1]);
     if(team == null){
         message.channel.sendMessage("That team does not exist!");
@@ -463,6 +483,7 @@ module.exports.addMember = function(message, input){
 }
 
 module.exports.removeMember = function(message, input){
+	log.info('team.js removeMember');
     var team = getByName(input[1]);
     if(team == null){
         message.channel.send("That team does not exist!");
@@ -490,6 +511,7 @@ module.exports.removeMember = function(message, input){
 }
 
 module.exports.addSub = function(message, input){
+	log.info('team.js addSub');
     var team = getByName(input[1]);
     if(team == null){
         message.channel.send("That team does not exist!");
@@ -521,6 +543,7 @@ module.exports.addSub = function(message, input){
 }
 
 module.exports.removeSub = function(message, input){
+	log.info('team.js removeSub');
     var team = getByName(input[1]);
     if(team == null){
         message.channel.send("That team does not exist!");
@@ -548,6 +571,7 @@ module.exports.removeSub = function(message, input){
 }
 
 module.exports.setCaptain = function(message, input){
+	log.info('team.js setCaptain');
     //I sure hope this person knows what they're doing
     var team = getByName(input[1]);
     if(team == null){
@@ -581,6 +605,7 @@ module.exports.setCaptain = function(message, input){
 }
 
 module.exports.setName = function(message, input){
+	log.info('team.js setName');
     var team = getByName(input[1]);
     if(team == null){
         message.channel.send("That team does not exist!");
@@ -619,6 +644,7 @@ module.exports.setName = function(message, input){
 }
 
 module.exports.remove = function(message, input){
+	log.info('team.js remove');
     var team = getByName(input[1]);
 	var teamIndex = indexByName(input[1]);
     if(team == null){

@@ -20,12 +20,13 @@ var rankEmojis = [
 
 var needsRefresh = false;
 
-var top5emoji = "1";
+var top5emoji = "447867125227323402";
 var showTop5 = false;
 
 module.exports.rankEmojis = rankEmojis;
 
 module.exports.update = function(){
+	log.info('stat.js update');
     log.info('updating all');
     var firstRun = user.all();
     updateUsers(firstRun, secondRun => {
@@ -59,6 +60,7 @@ module.exports.update = function(){
 }
 
 function updateUsers(ulist, callBack){
+	log.info('stat.js updateUsers(ulist(len:' + ulist.length + '), callback)');
     //Get stat information for each user with an attached account
     var left = ulist.length;
     var broken = [];
@@ -97,7 +99,7 @@ function updateUsers(ulist, callBack){
 };
 
 module.exports.loadOld = function(message, input){
-    log.info('loadold');
+	log.info('stat.js loadOld');
     var oldUsers = JSON.parse(localStorage.getItem('oldusr'));
     for(var i = 0; i < oldUsers.all.length; i++){
         var curr = oldUsers.all[i];
@@ -115,7 +117,7 @@ module.exports.loadOld = function(message, input){
 }
 
 module.exports.listHeroes = function(message, input){
-    log.info('listing heroes for ' + message.author.id);
+	log.info('stat.js listHeroes');
     var heroes = hero.getHeroes(user.get(message.author).heroCode);
     if(heroes.length == 0){
         message.channel.send("No heroes!");
@@ -131,6 +133,7 @@ module.exports.listHeroes = function(message, input){
 }
 
 module.exports.addHero = function(message, input){
+	log.info('stat.js addHero');
     log.info('adding hero ' + message.author.id);
     var u = null;
     if(input[4] == undefined || user.isMod(message.author.id)){
@@ -154,6 +157,7 @@ module.exports.addHero = function(message, input){
 }
 module.exports.refresh = refresh;
 function refresh(){
+	log.info('stat.js refresh');
 	if(!needsRefresh){
 		log.info('did not need refresh');
 		return;
@@ -226,7 +230,7 @@ function getSingleUserLine(u, top5){
 module.exports.getSingleUserLine = getSingleUserLine;
 
 module.exports.add = function(message, input){
-    log.info('adding stat entry');
+	log.info('stat.js add');
     var battleTagName = input[2];
     var battleTagNum = input[3];
     log.info(battleTagName + '#' + battleTagNum);
@@ -267,6 +271,7 @@ module.exports.add = function(message, input){
 }
 
 function getData(platform, region, battleTagName, battleTagNum, cb){
+	log.info('stat.js getData(' + platform + ', ' + region + ', ' + battleTagName + '#' + battleTagNum + ', callback)');
     http.get('http://ow-api.herokuapp.com/profile/' + platform + '/' + region + '/' + battleTagName + '-' + battleTagNum, res => {
         res.setEncoding("utf8");
         var body = "";

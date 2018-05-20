@@ -113,6 +113,7 @@ var heroes = [
 ];
 
 module.exports.getHeroes = function(heroCode){
+	log.info('hero.js getHeroes(' + heroCode + ')');
     //first, find max 2 power
     var pow = 0;
     while(true){
@@ -136,17 +137,20 @@ module.exports.getHeroes = function(heroCode){
 }
 
 module.exports.toggle = function(heroCode, hero){
+	log.info('hero.js toggle(' + heroCode + ', ' + hero + ')');
     for(var i = 0; i < heroes.length; i++){
         var input = heroes[i].regex.exec(hero.toLowerCase());
         if(input != null){
             if(getAllHeroes(heroCode)[i]){
                 heroCode -= Math.pow(2, i);
+				log.info('toggled off, new ' + heroCode);
                 return {
                     "heroCode": heroCode,
                     "newStatus": false
                 };
             }else{
                 heroCode += Math.pow(2, i);
+				log.info('toggled on, new ' + heroCode);
                 return {
                     "heroCode": heroCode,
                     "newStatus": true
@@ -162,6 +166,7 @@ module.exports.toggle = function(heroCode, hero){
 }
 
 function getAllHeroes(heroCode){
+	log.info('hero.js getAllHeroes(' + heroCode + ')');
     var pow = 0;
     while(true){
         if(Math.pow(2, pow) <= heroCode){

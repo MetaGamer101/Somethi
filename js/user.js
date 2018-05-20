@@ -17,7 +17,7 @@ var userTemplate = {
 };
 
 module.exports.start = function(){
-    log.info('starting up user parse');
+	log.info('user.js start');
 //    localStorage.setItem('users', JSON.stringify(users));
 //    console.log(Object.keys(localStorage.getItem('users')));
 //    uncomment above if you want to reset users.
@@ -43,16 +43,19 @@ module.exports.start = function(){
 };
 
 module.exports.isMod = function(id){
+	log.info('user.js isMod');
 	return c.bot.guilds.get(c.guildId).members.get(id).roles.keyArray().includes(c.moderator);
 }
 
 module.exports.newUser = function(guildMember){
+	log.info('user.js newUser');
     return newUserById(guildMember.id);
 };
 
 module.exports.newUserById = newUserById;
 
 function newUserById(guildMemberId){
+	log.info('user.js newUserById(' + guildMemberId + ')');
     log.info('creating new user with id' + guildMemberId);
     var newUser = JSON.parse(JSON.stringify(userTemplate)); // Create a new user from template
     newUser.guildMemberId = guildMemberId;                      // Give it the correct guildMember
@@ -62,24 +65,28 @@ function newUserById(guildMemberId){
 }
 
 module.exports.each = function(cb){
+	log.info('user.js each');
     for(var i = 0; i < users.length; i++){
         cb(users[i]);
     }
 }
 
 module.exports.all = function(){
+	log.info('user.js add');
     return users;
 }
     
 module.exports.save = save;
 
 function save(){
+	log.info('user.js save');
     localStorage.setItem('users', JSON.stringify(users));
 }
 
 module.exports.get = get;
 
 function get(guildMember){
+	log.info('user.js get(' + guildMember.id + ')');
     log.info('fetching guildMember ' + guildMember.id);
     for(var i = 0; i < users.length; i++){
         if(users[i].guildMemberId == guildMember.id){
@@ -92,6 +99,7 @@ function get(guildMember){
 module.exports.getById = getById;
 
 function getById(id){
+	log.info('user.s getById(' + id + ')');
     log.info('fetching guildMember ' + id);
     for(var i = 0; i < users.length; i++){
         if(users[i].guildMemberId == id){
@@ -102,6 +110,7 @@ function getById(id){
 }
 
 function indexById(guildMemberId){
+	log.info('user.js guildMemberId(' + guildMemberId + ')');
     log.info('fetching index for ' + guildMemberId);
     for(var i = 0; i < users.length; i++){
         if(users[i].guildMemberId == guildMemberId){
@@ -112,6 +121,7 @@ function indexById(guildMemberId){
 }
 
 module.exports.updateUser = function(userData){
+	log.info('user.js updateUser(userdata(' + userData.guildMemberId + '))');
     log.info('updating ' + userData.guildMemberId);
     var i = indexById(userData.guildMemberId);
     log.info('inserting at ' + i);
@@ -120,6 +130,7 @@ module.exports.updateUser = function(userData){
 }
 
 module.exports.updateUsernameById = function(id){
+	log.info('user.js updateUsernameById(' + id + ')');
     log.info('changing username to match battletag');
     var user = getById(id);
     if(team.isCaptain(id)){

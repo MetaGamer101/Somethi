@@ -1,12 +1,15 @@
 var https = require('https');
 var cheerio = require('cheerio');
+var log = require('./log.js');
 
 module.exports.getData = function(platform, region, battleTagName, battleTagNum, callback){
+	log.info('parse.js getData(' + platform + ', ' + region + ', ' + battleTagName + '#' + battleTagNum + ', callback)');
     var url;
     
     //currently, only pc is supported
     url = "https://playoverwatch.com/en-us/career/pc/" + battleTagName + "-" + battleTagNum;
     url = encodeURI(url);
+	log.info('fetching ' + url);
     
     https.get(url, res => {
         res.setEncoding("utf8");
@@ -15,6 +18,7 @@ module.exports.getData = function(platform, region, battleTagName, battleTagNum,
             html += data;
         });
         res.on("end", () => {
+			log.info('got data for ' + battleTagName + '#' + battleTagNum);
             //PARSE
             const $ = cheerio.load(html);
             var test = $('.u-align-center').first().text();

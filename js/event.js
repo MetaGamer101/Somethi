@@ -63,7 +63,7 @@ module.exports.message = function(message){
         var mh = msgmap[i];
         var input = mh.regex.exec(message.content);
         if(input != null){
-			log.info('Got message from ' + message.author.id);
+			log.info('message from ' + message.author.id + ', content: ' + message.content);
             try{
                 mh.func(message, input);
                 return;
@@ -78,11 +78,13 @@ module.exports.message = function(message){
 };
 
 module.exports.guildMemberAdd = function(guildMember){
+	log.info('event.js guildMemberAdd(' + guildMember.id + ')');
     core.guildMemberAdd(guildMember);
     user.newUser(guildMember);
 };
 
 module.exports.guildMemberRemove = function(guildMember){
+	log.info('event.js guildMemberRemove(' + guildMember.id + ')');
     core.guildMemberRemove(guildMember);
 };
 
