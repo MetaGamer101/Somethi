@@ -54,7 +54,6 @@ module.exports.ready = function(){
     tickLoop(); //start the tick loop
     log.info('ready');
     stat.update();
-    stat.refresh();
     team.refresh();
 };
 

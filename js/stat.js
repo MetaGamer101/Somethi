@@ -18,7 +18,7 @@ var rankEmojis = [
 	"445067373561511937"  //grandmaster
 ];
 
-var needsRefresh = false;
+var needsRefresh = true;
 
 var top5emoji = "447867125227323402";
 var showTop5 = false;
