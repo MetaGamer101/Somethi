@@ -99,7 +99,7 @@ function get(guildMember){
 module.exports.getById = getById;
 
 function getById(id){
-	log.info('user.s getById(' + id + ')');
+	log.info('user.js getById(' + id + ')');
     log.info('fetching guildMember ' + id);
     for(var i = 0; i < users.length; i++){
         if(users[i].guildMemberId == id){
