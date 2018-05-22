@@ -9,3 +9,6 @@ router.use('/resources', express.static(__dirname + '/resources/web'));
 
 var routeHome = require('./routes/page/home.js');
 router.get('/', routeHome);
+
+var routeReference = require('./routes/page/reference.js');
+router.get('/reference', routeReference);

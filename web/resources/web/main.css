@@ -2,6 +2,7 @@ body{
 	margin: 0px;
 	height: 100%;
 	font-family: Arial, Helvetica, sans-serif;
+	background-color: #333333;
 }
 
 a{
@@ -49,7 +50,6 @@ a:visited{
 
 .main{
 	background-color: #333333;
-	min-height: calc(50% - 5px);
 	border-top: 5px solid #000000;
 }
 
@@ -85,4 +85,23 @@ a:visited{
 	margin-top: 40px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.discord{
+	margin-left: auto;
+	margin-right: auto;
+	width: 350px;
+	width: 350px;
+	display: block;
+	margin-top: 40px;
+}
+
+.home{
+	padding: 5px;
+	border: 2px solid #1A1A1A;
+	border-radius: 5px;
+	color: #FFFFFF;
+	margin-left: 10px;
+	margin-top: 10px;
+	float: left;
 }
