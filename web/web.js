@@ -3,12 +3,10 @@ var router = express.Router();
 
 module.exports = router;
 
-//var routeResources = require('./routes/resource.js');
-//router.use('/resources', routeResources);
+var templater = require('./routes/templater.js');
+
+router.all(require('./routes/base.js'));
 router.use('/resources', express.static(__dirname + '/resources/web'));
 
-var routeHome = require('./routes/page/home.js');
-router.get('/', routeHome);
-
-var routeReference = require('./routes/page/reference.js');
-router.get('/reference', routeReference);
+router.get('/', require('./routes/page/home.js'));
+router.get('/reference', require('./routes/page/reference.js'));
